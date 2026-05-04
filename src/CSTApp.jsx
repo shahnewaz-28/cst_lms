@@ -28,18 +28,18 @@ const SEED_LEARNERS = [
 ];
 
 const SEED_COURSES = [
-  { id:"C1", name:"Safeguarding Adults",    emoji:"🛡️", duration:"3–4 hrs", enrolled:6, inProgress:2, completed:4, certs:4, dept:"Care Workers",  color:"#16A34A" },
-  { id:"C2", name:"First Aid Essentials",   emoji:"🩺", duration:"2 hrs",   enrolled:4, inProgress:2, completed:2, certs:2, dept:"Senior Carers", color:"#2A6FDB" },
-  { id:"C3", name:"Data Protection",        emoji:"🔒", duration:"1.5 hrs", enrolled:5, inProgress:3, completed:1, certs:1, dept:"Admin Staff",   color:"#DC2626" },
-  { id:"C4", name:"Mental Health Awareness",emoji:"🧠", duration:"2.5 hrs", enrolled:3, inProgress:1, completed:2, certs:2, dept:"All",           color:"#7C3AED" },
-  { id:"C5", name:"Fire Safety",            emoji:"🔥", duration:"1 hr",    enrolled:8, inProgress:0, completed:8, certs:8, dept:"All",           color:"#EA580C" },
-  { id:"C6", name:"Food Hygiene Level 2",   emoji:"🍽️", duration:"2 hrs",   enrolled:2, inProgress:0, completed:2, certs:2, dept:"Catering",      color:"#0891B2" },
+  { id:"C1", name:"Care Certificate Standards 1-16",          emoji:"📋", duration:"8 hrs",   enrolled:6, inProgress:2, completed:4, certs:4, dept:"Care Workers",  color:"#16A34A" },
+  { id:"C2", name:"Level 3 Safeguarding Adults Training",     emoji:"🛡️", duration:"3–4 hrs", enrolled:4, inProgress:2, completed:2, certs:2, dept:"Senior Carers", color:"#2A6FDB" },
+  { id:"C3", name:"Moving and Handling People",               emoji:"🏋️", duration:"2 hrs",   enrolled:5, inProgress:3, completed:1, certs:1, dept:"Care Workers",  color:"#DC2626" },
+  { id:"C4", name:"Medication Administration Level 4",        emoji:"💊", duration:"2.5 hrs", enrolled:3, inProgress:1, completed:2, certs:2, dept:"Senior Carers", color:"#7C3AED" },
+  { id:"C5", name:"Infection Prevention and Control Training",emoji:"🦠", duration:"1.5 hrs", enrolled:8, inProgress:0, completed:8, certs:8, dept:"All",           color:"#EA580C" },
+  { id:"C6", name:"Emergency First Aid at Work",              emoji:"🩺", duration:"2 hrs",   enrolled:2, inProgress:0, completed:2, certs:2, dept:"All",           color:"#0891B2" },
 ];
 
 const SEED_CERTS = [
-  { id:"CT1", learnerId:"L1", learnerName:"Margaret Whitfield",    courseId:"C2", courseName:"First Aid Essentials", claimedOn:"2026-04-21", status:"Active",  type:"Assignment" },
-  { id:"CT2", learnerId:"L1", learnerName:"Margaret Whitfield",    courseId:"C5", courseName:"Fire Safety",          claimedOn:"2026-03-15", status:"Active",  type:"Self-enrolment" },
-  { id:"CT4", learnerId:"L8", learnerName:"Patricia Hollingsworth",courseId:"C3", courseName:"Data Protection",      claimedOn:"2026-01-01", status:"Expired", type:"Assignment" },
+  { id:"CT1", learnerId:"L1", learnerName:"Margaret Whitfield",    courseId:"C2", courseName:"Level 3 Safeguarding Adults Training",     claimedOn:"2026-04-21", status:"Active",  type:"Assignment" },
+  { id:"CT2", learnerId:"L1", learnerName:"Margaret Whitfield",    courseId:"C5", courseName:"Infection Prevention and Control Training", claimedOn:"2026-03-15", status:"Active",  type:"Self-enrolment" },
+  { id:"CT4", learnerId:"L8", learnerName:"Patricia Hollingsworth",courseId:"C3", courseName:"Moving and Handling People",               claimedOn:"2026-01-01", status:"Expired", type:"Assignment" },
 ];
 
 const SEED_SETTINGS = {
@@ -226,16 +226,16 @@ function Sidebar({ page, setPage, learnerCount, settings, open, onClose }) {
     <>
       {open && <div className={`cst-overlay${open?" open":""}`} onClick={onClose}/>}
     <aside className={`cst-sidebar${open?" open":""}`} style={{background:T.navy,display:"flex",flexDirection:"column",height:"100vh",position:"sticky",top:0}}>
-      <div style={{padding:"16px 18px 14px",borderBottom:`1px solid rgba(255,255,255,.08)`}}>
+      <div style={{padding:"14px 16px",background:T.navy,borderBottom:`1px solid rgba(255,255,255,.08)`}}>
         <img src="data:image/png;base64,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"
           alt="Care Skills Training"
-          style={{width:"100%",maxWidth:160,height:"auto",display:"block",marginBottom:10}}/>
-        <div style={{fontSize:9.5,color:"rgba(255,255,255,.35)",letterSpacing:".06em",textTransform:"uppercase",whiteSpace:"nowrap",paddingLeft:2}}>Learning Management Suite</div>
+          style={{height:36,width:"auto",maxWidth:140,display:"block",margin:"0 auto 6px"}}/>
+        <div style={{fontSize:9.5,color:"rgba(255,255,255,.45)",letterSpacing:".08em",textTransform:"uppercase",textAlign:"center"}}>Learning Management Suite</div>
       </div>
       <nav style={{flex:1,padding:"8px 0",overflowY:"auto"}}>
         {NAV.map(n=>(
           <div key={n.id} onClick={()=>setPage(n.id)}
-            style={{display:"flex",alignItems:"center",gap:10,padding:"9px 18px",cursor:"pointer",fontSize:12.5,color:page===n.id?"#fff":"rgba(255,255,255,.55)",background:page===n.id?"rgba(42,111,219,.2)":"transparent",borderLeft:`2px solid ${page===n.id?T.accent:"transparent"}`,transition:"all .12s"}}>
+            style={{display:"flex",alignItems:"center",gap:10,padding:"9px 18px",cursor:"pointer",fontSize:12.5,color:page===n.id?"#fff":"rgba(255,255,255,.55)",background:page===n.id?"rgba(42,111,219,.2)":"transparent",borderLeft:`2px solid ${page===n.id?T.accent:"transparent"}`,transition:"all .12s",fontWeight:page===n.id?600:400}}>
             <Icon d={ICONS[n.icon]} size={15} color={page===n.id?"#fff":"rgba(255,255,255,.55)"}/>
             <span style={{flex:1}}>{n.label}</span>
             {n.badge && <span style={{background:T.accent,color:"#fff",fontSize:10,padding:"1px 6px",borderRadius:20,fontWeight:600}}>{learnerCount}</span>}
@@ -1261,78 +1261,718 @@ function TeamMembersReport({ learners, courses, showToast }) {
 }
 
 // ─── REPORTS PAGE ─────────────────────────────────────────────────────────────
-function PageReports({ courses, learners, certs, showToast, initialCourseId, clearReportCourse }) {
-  const [rtab, setRtab]=useState("course");
-  const [highlightId, setHighlightId]=useState(initialCourseId||null);
-  useEffect(()=>{ if(initialCourseId){ setRtab("course"); setHighlightId(initialCourseId); clearReportCourse&&clearReportCourse(); } },[initialCourseId]);
-  const tabs=[["course","Course Reports"],["team","Team Members"],["cert","Certificates"],["activity","User Activity"]];
-  const active=learners.filter(l=>l.status!=="Deactivated");
+function PageReports({ courses, learners, certs, showToast }) {
+  const [view, setView] = useState(null); // null | 'compliance' | 'spreadsheet' | 'records' | 'certs'
+  // compliance filters
+  const [passMark, setPassMark] = useState(80);
+  const [statusFilter, setStatusFilter] = useState('all');
+  // spreadsheet filters
+  const [ssStart, setSsStart] = useState('2025-01-01');
+  const [ssEnd, setSsEnd] = useState(new Date().toISOString().slice(0,10));
+  const [ssDept, setSsDept] = useState('all');
+  const [ssCourse, setSsCourse] = useState('all');
+  const [ssArchived, setSsArchived] = useState('all');
+  const [ssTrainee, setSsTrainee] = useState('all');
+  // records filters
+  const [recLearner, setRecLearner] = useState('all');
 
-  return (
-    <div style={{padding:"24px 28px"}}>
-      <div style={{display:"flex",borderBottom:`1px solid ${T.border}`,marginBottom:20}}>
-        {tabs.map(([v,l])=>(
-          <div key={v} onClick={()=>setRtab(v)} style={{padding:"10px 18px",fontSize:13,cursor:"pointer",borderBottom:`2px solid ${rtab===v?T.accent:"transparent"}`,color:rtab===v?T.accent:T.text3,fontWeight:rtab===v?600:400,marginBottom:-1,transition:"all .15s"}}>{l}</div>
+  // ── helpers ──────────────────────────────────────────────────────────────
+  function dlCSV(filename, rows) {
+    const BOM = '﻿'; // UTF-8 BOM for Excel compatibility
+    const csv = BOM + rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
+    const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 200);
+    showToast(`Downloaded: ${filename}`);
+  }
+
+  // per-learner per-course status
+  function lStatus(l, c) {
+    if (l.status==='Deactivated') return 'Archived';
+    const idx = courses.indexOf(c);
+    const band = 100 / courses.length;
+    const done = l.progress >= (idx+1)*band;
+    const started = l.progress > idx*band;
+    if (done) return 'Passed';
+    if (started) return 'In Progress';
+    return 'Not Started';
+  }
+  function statusStyle(s) {
+    if (s==='Passed')      return {bg:'#DCFCE7',color:'#166534'};
+    if (s==='In Progress') return {bg:'#FEF3C7',color:'#92400E'};
+    if (s==='Archived')    return {bg:T.bg,     color:T.text3};
+    return {bg:T.bg, color:T.text3};
+  }
+
+  // ── aggregate stats ──────────────────────────────────────────────────────
+  const active = learners.filter(l=>l.status!=='Deactivated');
+  const totalEnrolled   = courses.reduce((s,c)=>s+c.enrolled,0);
+  const totalCompleted  = courses.reduce((s,c)=>s+c.completed,0);
+  const totalInProgress = courses.reduce((s,c)=>s+c.inProgress,0);
+  const totalFailed     = totalEnrolled - totalCompleted - totalInProgress;
+  const compliancePct   = totalEnrolled>0 ? Math.round(totalCompleted/totalEnrolled*100) : 0;
+
+  // ── CSV generators ───────────────────────────────────────────────────────
+  // shared helper: course-level completion per learner
+  function courseCompleted(l, courseIdx) {
+    const band = 100 / courses.length;
+    return l.progress >= (courseIdx + 1) * band;
+  }
+  function courseScore(l, courseIdx) {
+    return courseCompleted(l, courseIdx) ? l.progress : '';
+  }
+
+  function dlComplianceMatrix() {
+    // Matrix format: learners as rows, courses as columns
+    const header = ['First name','Last name','Department','Status',
+      ...courses.map(c=>c.name),'Overall %',
+      '','Enrolments','Passed','Compliance %'];
+    const rows = learners.map(l=>{
+      const [fn,...rest]=l.name.split(' ');
+      const statuses = courses.map((c,i)=>courseCompleted(l,i)?'Completed':'Not completed');
+      const passed = courses.filter((_,i)=>courseCompleted(l,i)).length;
+      return [fn,rest.join(' '),l.dept,l.status,...statuses,
+        `${Math.round(passed/courses.length*100)}%`,
+        '','','',''];
+    });
+    const blank = Array(4+courses.length+5).fill('');
+    const enrol = [...Array(4).fill(''),...courses.map(c=>c.enrolled),'','','Total',totalEnrolled,''];
+    const passd = [...Array(4).fill(''),...courses.map(c=>c.completed),'','','Passed',totalCompleted,''];
+    const pct   = [...Array(4).fill(''),...courses.map(c=>`${Math.round(c.completed/Math.max(c.enrolled,1)*100)}%`),'','','Compliance %',`${compliancePct}%`,''];
+    dlCSV('cst-compliance-matrix.csv',[header,...rows,blank,enrol,passd,pct]);
+  }
+
+  function dlTraineeSpreadsheet() {
+    const hdr = ['Surname','First name','Email','Department','Account status',
+      'Course','Enrolled date','Completed','Score (%)','Last activity'];
+    const rows = [];
+    learners.forEach(l=>{
+      const [fn,...rest]=l.name.split(' ');
+      courses.forEach((c,i)=>{
+        const done = courseCompleted(l,i);
+        rows.push([rest.join(' '), fn, l.email, l.dept, l.status, c.name,
+          new Date(l.joined).toLocaleDateString('en-GB'),
+          done?'Yes':'No',
+          courseScore(l,i),
+          new Date(l.joined).toLocaleDateString('en-GB')]);
+      });
+    });
+    dlCSV('cst-trainee-spreadsheet.csv',[hdr,...rows]);
+  }
+
+  function dlTrainingRecords() {
+    const hdr = ['Trainee','Email','Department','Status','Course',
+      'Enrolled','Completed','Score (%)','Certificate date'];
+    const rows = [];
+    learners.forEach(l=>{
+      courses.forEach((c,i)=>{
+        const done = courseCompleted(l,i);
+        const cert = certs.find(ct=>ct.learnerId===l.id&&ct.courseId===c.id);
+        rows.push([l.name, l.email, l.dept, l.status, c.name,
+          new Date(l.joined).toLocaleDateString('en-GB'),
+          done?'Yes':'No',
+          courseScore(l,i),
+          cert ? new Date(cert.claimedOn).toLocaleDateString('en-GB') : '']);
+      });
+    });
+    dlCSV('cst-training-records.csv',[hdr,...rows]);
+  }
+
+  function dlCertRegister() {
+    const hdr = ['Certificate ID','Learner name','Email','Department',
+      'Course','Date issued','Status','Enrolment type'];
+    const rows = certs.map(ct=>{
+      const l = learners.find(x=>x.id===ct.learnerId);
+      return [ct.id, ct.learnerName, l?.email??'', l?.dept??'',
+        ct.courseName, new Date(ct.claimedOn).toLocaleDateString('en-GB'),
+        ct.status, ct.type];
+    });
+    dlCSV('cst-certificate-register.csv',[hdr,...rows]);
+  }
+
+  const DEPTS = ['all',...new Set(learners.map(l=>l.dept))];
+  const STATUS_OPTS = [
+    {v:'all',        label:'All statuses'},
+    {v:'failed',     label:'Failed'},
+    {v:'enrolled',   label:'Enrolled'},
+    {v:'passed12',   label:'Passed over 12 months ago'},
+    {v:'passedrecent',label:'Passed in last 12 months'},
+    {v:'passedany',  label:'Passed any time'},
+  ];
+
+  // rich status per learner per course
+  function richStatus(l, c) {
+    if(l.status==='Deactivated') return 'archived';
+    const idx=courses.indexOf(c);
+    const band=100/courses.length;
+    const done=l.progress>=(idx+1)*band;
+    const started=l.progress>idx*band;
+    if(!started && !done) return 'notenrolled';
+    if(done) {
+      const cert=certs.find(ct=>ct.learnerId===l.id&&ct.courseId===c.id);
+      const date=cert?new Date(cert.claimedOn):new Date(l.joined);
+      const twelveMonthsAgo=new Date(); twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear()-1);
+      if(l.progress>=passMark) return date<twelveMonthsAgo?'passed12':'passedrecent';
+      return 'failed';
+    }
+    return 'enrolled';
+  }
+
+  function cellStyle(rs) {
+    if(rs==='failed')       return {bg:'#DC2626',color:'#fff'};
+    if(rs==='enrolled')     return {bg:'#D97706',color:'#fff'};
+    if(rs==='passed12')     return {bg:'#166534',color:'#fff'};
+    if(rs==='passedrecent') return {bg:'#16A34A',color:'#fff'};
+    if(rs==='notenrolled')  return {bg:'transparent',color:T.text3};
+    return {bg:T.bg,color:T.text3};
+  }
+
+  function cellLabel(rs) {
+    if(rs==='failed')       return 'Overdue';
+    if(rs==='enrolled')     return 'Due soon';
+    if(rs==='passed12')     return 'Completed';
+    if(rs==='passedrecent') return 'Completed';
+    return '—';
+  }
+
+  // ── filtered matrix rows ─────────────────────────────────────────────────
+  const matrixRows = learners.filter(l=>{
+    const rs=courses.map(c=>richStatus(l,c));
+    if(statusFilter==='all') return true;
+    if(statusFilter==='failed')      return rs.some(s=>s==='failed');
+    if(statusFilter==='enrolled')    return rs.some(s=>s==='enrolled');
+    if(statusFilter==='passed12')    return rs.some(s=>s==='passed12');
+    if(statusFilter==='passedrecent')return rs.some(s=>s==='passedrecent');
+    if(statusFilter==='passedany')   return rs.some(s=>s==='passed12'||s==='passedrecent');
+    return true;
+  });
+
+  const sel = {background:T.accentLight,border:`1px solid ${T.accent}`,color:T.accent,fontWeight:700};
+  const unsel = {background:T.white,border:`1px solid ${T.border}`,color:T.text2,fontWeight:500};
+  const fldStyle = {padding:"7px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,color:T.text,background:T.white,outline:"none",cursor:"pointer"};
+
+  // ── back button ───────────────────────────────────────────────────────────
+  const BackBtn = ()=>(
+    <button onClick={()=>setView(null)} style={{display:"inline-flex",alignItems:"center",gap:6,background:"none",border:"none",cursor:"pointer",color:T.text2,fontSize:13,fontFamily:T.font,marginBottom:20,padding:0}}>
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      Back to Reports
+    </button>
+  );
+
+  // ── CQC cell renderer ────────────────────────────────────────────────────
+  function CQCCell({rs, joined}) {
+    if(rs==='archived') return(
+      <td style={{textAlign:"center",padding:"10px 6px"}}>
+        <span style={{display:"inline-block",padding:"4px 14px",borderRadius:20,border:`1px solid ${T.border}`,fontSize:12,color:T.text3}}>N/A</span>
+      </td>
+    );
+    if(rs==='notenrolled') return(
+      <td style={{textAlign:"center",padding:"10px 6px"}}>
+        <span style={{display:"inline-block",padding:"4px 12px",borderRadius:20,border:`1px solid ${T.border}`,fontSize:12,color:T.text3,whiteSpace:"nowrap"}}>Not enrolled</span>
+      </td>
+    );
+    if(rs==='passed12'||rs==='passedrecent') return(
+      <td style={{textAlign:"center",padding:"10px 6px"}}>
+        <span style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"#DCFCE7",fontSize:12.5,fontWeight:600,color:"#166534"}}>Completed</span>
+      </td>
+    );
+    if(rs==='enrolled') {
+      const due=new Date(joined); due.setMonth(due.getMonth()+6);
+      const label=`Due ${due.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
+      return(
+        <td style={{textAlign:"center",padding:"10px 6px"}}>
+          <span style={{display:"inline-block",padding:"4px 12px",borderRadius:20,background:"#FEF3C7",fontSize:12.5,fontWeight:600,color:"#92400E",whiteSpace:"nowrap"}}>{label}</span>
+        </td>
+      );
+    }
+    if(rs==='failed') return(
+      <td style={{textAlign:"center",padding:"10px 6px"}}>
+        <span style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"#FEE2E2",fontSize:12.5,fontWeight:600,color:"#DC2626"}}>Overdue</span>
+      </td>
+    );
+    return <td style={{textAlign:"center",padding:"10px 6px",color:T.text3}}>—</td>;
+  }
+
+  const [matrixTab, setMatrixTab] = useState('training');
+
+  // ══ DETAIL: COMPLIANCE MATRIX ════════════════════════════════════════════
+  if(view==='compliance') return (
+    <div style={{padding:"28px 32px",maxWidth:1060,margin:"0 auto"}}>
+      <BackBtn/>
+      <div style={{display:"flex",alignItems:"center",marginBottom:20,flexWrap:"wrap",gap:10}}>
+        {[{v:'training',l:'Training matrix'},{v:'cqc',l:'CQC compliance'},{v:'certs',l:'Certificates'}].map(t=>(
+          <button key={t.v} onClick={()=>setMatrixTab(t.v)}
+            style={{padding:"8px 20px",borderRadius:20,border:`1.5px solid ${matrixTab===t.v?T.text:T.border}`,background:matrixTab===t.v?T.text:"transparent",color:matrixTab===t.v?'#fff':T.text2,fontSize:13.5,fontWeight:600,cursor:"pointer",fontFamily:T.font,transition:"all .15s",flexShrink:0}}>
+            {t.l}
+          </button>
+        ))}
+        <div style={{marginLeft:"auto",flexShrink:0}}>
+          <Btn variant="primary" sm onClick={matrixTab==='certs'?dlCertRegister:dlComplianceMatrix}>
+            ⬇ {matrixTab==='certs'?'Download Certificate Register':'Download CSV'}
+          </Btn>
+        </div>
+      </div>
+
+      {/* ── CQC COMPLIANCE TAB ── */}
+      {matrixTab==='cqc'&&(()=>{
+        const courseStats = courses.map(c=>{
+          const pct = Math.round(c.completed / Math.max(c.enrolled,1) * 100);
+          const barColor = pct>=passMark?'#16A34A':pct>=65?'#D97706':'#DC2626';
+          return {name:c.name, pct, barColor};
+        }).sort((a,b)=>b.pct-a.pct);
+        return(
+          <div>
+            <div style={{fontSize:14,fontWeight:600,color:T.text,marginBottom:20}}>
+              CQC regulation 18 — staffing compliance by course
+            </div>
+            <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:"8px 0"}}>
+              {courseStats.map(({name,pct,barColor},i)=>(
+                <div key={name} style={{display:"flex",alignItems:"center",gap:16,padding:"14px 24px",borderBottom:i<courseStats.length-1?`1px solid ${T.border}`:"none"}}>
+                  <div style={{width:180,fontSize:13.5,color:T.text,flexShrink:0}}>{name}</div>
+                  <div style={{flex:1,height:8,background:'#E5E7EB',borderRadius:4,overflow:"hidden"}}>
+                    <div style={{width:`${pct}%`,height:"100%",background:barColor,borderRadius:4,transition:"width .4s ease"}}/>
+                  </div>
+                  <div style={{width:48,textAlign:"right",fontSize:13.5,fontWeight:700,color:barColor,flexShrink:0}}>{pct}%</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── CERTIFICATES TAB ── */}
+      {matrixTab==='certs'&&(()=>{
+        function genCode(){return`${Math.floor(1000+Math.random()*9000)}-${Math.floor(10000+Math.random()*90000)}-${Math.floor(1000+Math.random()*9000)}`;}
+        function openCert(ct){
+          const code=genCode();
+          const waveSVG=(side)=>`<svg xmlns="http://www.w3.org/2000/svg" width="90" height="900" style="position:absolute;${side}:0;top:0;height:100%;pointer-events:none;opacity:.18"><path d="M${side==='left'?70:20},0 C${side==='left'?20:70},80 ${side==='left'?80:10},160 ${side==='left'?30:60},240 C${side==='left'?-10:90},320 ${side==='left'?80:10},400 ${side==='left'?30:60},480 C${side==='left'?-10:90},560 ${side==='left'?80:10},640 ${side==='left'?30:60},720 C${side==='left'?-10:90},800 ${side==='left'?70:20},880 ${side==='left'?40:50},900" stroke="#4A7BB5" stroke-width="2" fill="none"/><path d="M${side==='left'?55:35},0 C${side==='left'?5:85},80 ${side==='left'?65:25},160 ${side==='left'?15:75},240 C${side==='left'?-25:105},320 ${side==='left'?65:25},400 ${side==='left'?15:75},480 C${side==='left'?-25:105},560 ${side==='left'?65:25},640 ${side==='left'?15:75},720 C${side==='left'?-25:105},800 ${side==='left'?55:35},880 ${side==='left'?25:65},900" stroke="#4A7BB5" stroke-width="1.5" fill="none"/><path d="M${side==='left'?40:50},0 C${side==='left'?-10:100},80 ${side==='left'?50:40},160 ${side==='left'?0:90},240 C${side==='left'?-40:120},320 ${side==='left'?50:40},400 ${side==='left'?0:90},480 C${side==='left'?-40:120},560 ${side==='left'?50:40},640 ${side==='left'?0:90},720 C${side==='left'?-40:120},800 ${side==='left'?40:50},880 ${side==='left'?10:80},900" stroke="#4A7BB5" stroke-width="1" fill="none"/></svg>`;
+          const cpdLogo=`<svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58"><circle cx="29" cy="29" r="27" fill="#fff" stroke="#1B3A6B" stroke-width="2.5"/><circle cx="29" cy="29" r="23" fill="none" stroke="#1B3A6B" stroke-width="1"/><text x="29" y="23" text-anchor="middle" font-family="Arial Black,Arial" font-size="12" font-weight="900" fill="#1B3A6B">CPD</text><text x="29" y="33" text-anchor="middle" font-family="Arial,sans-serif" font-size="6.5" font-weight="700" fill="#1B3A6B" letter-spacing="1">CERTIFIED</text><text x="29" y="43" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" fill="#666">The CPD Certification</text><text x="29" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" fill="#666">Service</text></svg>`;
+          const ukrlpLogo=`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="58" viewBox="0 0 80 58"><rect width="80" height="58" rx="4" fill="#fff" stroke="#1B3A6B" stroke-width="1.5"/><text x="40" y="17" text-anchor="middle" font-family="Arial Black,Arial" font-size="11" font-weight="900" fill="#1B3A6B">UKRLP</text><line x1="8" y1="22" x2="72" y2="22" stroke="#1B3A6B" stroke-width="0.8"/><text x="40" y="31" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" fill="#333">UK Register of</text><text x="40" y="39" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.5" fill="#333">Learning Providers</text><text x="40" y="50" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" fill="#666">UKPRN: 10094979</text></svg>`;
+          const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Certificate — ${ct.learner}</title><style>
+*{margin:0;padding:0;box-sizing:border-box;}
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap');
+body{width:100%;min-height:100vh;background:#D8DCE8;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Georgia,serif;}
+.page{width:680px;min-height:960px;background:#E8EBF2;position:relative;padding:52px 68px 36px;display:flex;flex-direction:column;align-items:center;text-align:center;overflow:hidden;}
+.pattern{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(60,80,130,.055) 0,rgba(60,80,130,.055) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,rgba(60,80,130,.055) 0,rgba(60,80,130,.055) 1px,transparent 0,transparent 50%);background-size:14px 14px;pointer-events:none;z-index:0;}
+.content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;flex:1;}
+.logo{height:78px;width:auto;display:block;margin:0 auto 28px;}
+.cert-title{font-size:62px;font-weight:900;letter-spacing:5px;text-transform:uppercase;color:#1B3A6B;font-family:'Arial Black',Arial,sans-serif;line-height:1;margin-bottom:6px;}
+.cert-sub{display:flex;align-items:center;gap:14px;color:#1B3A6B;font-size:12px;letter-spacing:6px;text-transform:uppercase;margin-bottom:38px;width:100%;}
+.cert-sub::before,.cert-sub::after{content:'';flex:1;height:1.5px;background:#1B3A6B;}
+.presented{font-size:15px;color:#555;font-style:italic;margin-bottom:10px;font-family:Georgia,serif;}
+.name{font-size:40px;font-weight:700;color:#1B3A6B;margin-bottom:16px;font-family:'Arial Black',Arial,sans-serif;}
+.recognition{font-size:14px;color:#555;font-style:italic;margin-bottom:12px;}
+.course{font-size:21px;font-weight:700;color:#1B3A6B;margin-bottom:36px;line-height:1.5;max-width:500px;}
+.issued{font-size:14.5px;color:#555;margin-bottom:8px;}
+.issued b,.code b{color:#2A6FDB;font-size:15px;}
+.code{font-size:14.5px;color:#555;}
+.spacer{flex:1;}
+.footer{display:flex;justify-content:space-between;align-items:flex-end;width:100%;margin-top:36px;padding-top:16px;border-top:1px solid rgba(27,58,107,.2);font-size:10px;color:#555;position:relative;z-index:1;}
+.addr{text-align:left;line-height:2;}
+.addr span{display:block;}
+.logos{display:flex;gap:10px;align-items:center;}
+.sig{text-align:right;}
+.sig-script{font-family:'Dancing Script',cursive,'Comic Sans MS',cursive;font-size:26px;color:#222;margin-bottom:2px;line-height:1;}
+.sig-line{width:110px;height:1px;background:#999;margin:4px 0 6px auto;}
+.sig-name{font-weight:700;font-size:11px;color:#1B3A6B;}
+.sig-title{font-size:10px;color:#555;}
+@media print{body{background:#E8EBF2;margin:0;padding:0;}@page{size:A4 portrait;margin:0;}.page{width:210mm;min-height:297mm;}}
+</style></head><body>
+<div class="page">
+  <div class="pattern"></div>
+  ${waveSVG('left')}
+  ${waveSVG('right')}
+  <div class="content">
+    <img class="logo" src="${LOGO_B64}" alt="Care Skills Training"/>
+    <div class="cert-title">Certificate</div>
+    <div class="cert-sub">of achievement</div>
+    <p class="presented">This certificate is proudly presented to</p>
+    <p class="name">${ct.learner}</p>
+    <p class="recognition">in recognition of successful completion of the course</p>
+    <p class="course">${ct.course}</p>
+    <p class="issued">This certificate is issued on <b>${ct.completed}</b></p>
+    <p class="code">Certificate code <b>${code}</b></p>
+    <div class="spacer"></div>
+    <div class="footer">
+      <div class="addr">
+        <span>📍 71-75 Shelton Street, Covent Garden</span>
+        <span>&nbsp;&nbsp;&nbsp;WC2H 9JQ, London, United Kingdom</span>
+        <span>✉ info@careskillstraining.org</span>
+        <span>🌐 www.careskillstraining.org</span>
+      </div>
+      <div class="logos">
+        ${cpdLogo}
+        ${ukrlpLogo}
+      </div>
+      <div class="sig">
+        <div class="sig-script">Alex Fuller</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Alex Fuller</div>
+        <div class="sig-title">Director of Certification</div>
+        <div class="sig-title">Care Skills Training</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>window.onload=()=>{setTimeout(()=>window.print(),500);}</script>
+</body></html>`;
+          const blob=new Blob([html],{type:'text/html'});
+          const url=URL.createObjectURL(blob);
+          window.open(url,'_blank');
+        }
+
+        const now = new Date();
+        const allCerts = [];
+        learners.forEach(l=>{
+          courses.forEach((c,i)=>{
+            if(!courseCompleted(l,i)) return;
+            const issued = new Date(l.joined);
+            issued.setMonth(issued.getMonth() + Math.floor((i+1)*2));
+            const explicit = certs.find(ct=>ct.learnerId===l.id&&ct.courseId===c.id);
+            const issuedFinal = explicit ? new Date(explicit.claimedOn) : issued;
+            const expiresFinal = new Date(issuedFinal); expiresFinal.setFullYear(expiresFinal.getFullYear()+1);
+            const valid = expiresFinal > now;
+            allCerts.push({
+              learner:l.name, course:c.name,
+              completed:issuedFinal.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+              score:l.progress,
+              expires:expiresFinal.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+              valid,
+            });
+          });
+        });
+        allCerts.sort((a,b)=>b.valid-a.valid);
+        return(
+          <div>
+            <div style={{fontSize:13.5,color:T.text3,marginBottom:16}}>Click any card to download the certificate as PDF.</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+              {allCerts.map((ct,i)=>(
+                <div key={i} onClick={()=>openCert(ct)} style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:"20px 22px",cursor:"pointer",transition:"box-shadow .15s,border-color .15s"}}
+                  onMouseEnter={e=>{e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.1)";e.currentTarget.style.borderColor=T.accent;}}
+                  onMouseLeave={e=>{e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=T.border;}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:2}}>
+                    <div style={{fontSize:14,fontWeight:700,color:T.text}}>{ct.learner}</div>
+                    <span style={{fontSize:11,color:T.accent,fontWeight:600}}>⬇ PDF</span>
+                  </div>
+                  <div style={{fontSize:12.5,color:T.text3,marginBottom:14}}>{ct.course}</div>
+                  {[{label:'Completed',value:ct.completed},{label:'Score',value:`${ct.score}%`},{label:'Expires',value:ct.expires}].map(({label,value})=>(
+                    <div key={label} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"5px 0",borderBottom:`1px solid ${T.border}`}}>
+                      <span style={{fontSize:13,color:T.text2}}>{label}</span>
+                      <span style={{fontSize:13,fontWeight:600,color:T.text}}>{value}</span>
+                    </div>
+                  ))}
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"5px 0",marginTop:2}}>
+                    <span style={{fontSize:13,color:T.text2}}>Status</span>
+                    <span style={{padding:"3px 12px",borderRadius:20,fontSize:12.5,fontWeight:600,background:ct.valid?'#DCFCE7':'#FEE2E2',color:ct.valid?'#166534':'#DC2626'}}>{ct.valid?'Valid':'Expired'}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── TRAINING MATRIX TAB ── */}
+      {matrixTab==='training'&&<>
+      {/* legend */}
+      <div style={{display:"flex",gap:22,marginBottom:18,flexWrap:"wrap"}}>
+        {[{c:'#16A34A',l:'Completed'},{c:'#D97706',l:'Due soon'},{c:'#DC2626',l:'Overdue'},{c:'#94A3B8',l:'Not enrolled'}].map(({c,l})=>(
+          <div key={l} style={{display:"flex",alignItems:"center",gap:6,fontSize:13,color:T.text2}}>
+            <div style={{width:10,height:10,borderRadius:"50%",background:c,flexShrink:0}}/>
+            {l}
+          </div>
         ))}
       </div>
 
-      {rtab==="course"&&(
-        <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,overflow:"hidden"}}>
-          <div style={{display:"flex",justifyContent:"flex-end",padding:"14px 20px",borderBottom:`1px solid ${T.border}`}}>
-            <Btn variant="outline" sm onClick={()=>showToast("📥 Course report exported!")}>⬇ Download</Btn>
+      {/* filters row */}
+      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16,flexWrap:"wrap"}}>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <span style={{fontSize:13,color:T.text2}}>Pass mark:</span>
+          <select value={passMark} onChange={e=>setPassMark(Number(e.target.value))} style={fldStyle}>
+            {[60,70,75,80,85,90,100].map(v=><option key={v} value={v}>{v}%</option>)}
+          </select>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <span style={{fontSize:13,color:T.text2}}>Status:</span>
+          <select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)} style={fldStyle}>
+            {STATUS_OPTS.map(o=><option key={o.v} value={o.v}>{o.label}</option>)}
+          </select>
+        </div>
+        <span style={{fontSize:12,color:T.text3}}>{matrixRows.length} staff member{matrixRows.length!==1?'s':''}</span>
+      </div>
+
+      {/* table */}
+      <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,overflow:"hidden"}}>
+        <div className="cst-table-scroll">
+          <table style={{width:"100%",borderCollapse:"collapse",minWidth:640}}>
+            <thead>
+              <tr style={{background:T.bg,borderBottom:`1px solid ${T.border}`}}>
+                <th style={{textAlign:"left",padding:"12px 18px",fontSize:12.5,fontWeight:700,color:T.text,minWidth:160}}>Staff member</th>
+                <th style={{textAlign:"left",padding:"12px 14px",fontSize:12.5,fontWeight:700,color:T.text,minWidth:120}}>Role</th>
+                {courses.map(c=>(
+                  <th key={c.id} title={c.name} style={{textAlign:"center",padding:"12px 8px",fontSize:12,fontWeight:700,color:T.text,minWidth:110,lineHeight:1.3}}>
+                    {c.name.split(' ').length>2?<>{c.name.split(' ').slice(0,Math.ceil(c.name.split(' ').length/2)).join(' ')}<br/>{c.name.split(' ').slice(Math.ceil(c.name.split(' ').length/2)).join(' ')}</>:c.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {matrixRows.map(l=>{
+                const rs=courses.map(c=>richStatus(l,c));
+                const isManager=l.dept==='Admin Staff';
+                return(
+                  <tr key={l.id} style={{borderBottom:`1px solid ${T.border}`}}
+                    onMouseEnter={e=>e.currentTarget.style.background='#FAFAFA'}
+                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                    <td style={{padding:"12px 18px",fontSize:13.5,fontWeight:500,color:T.text}}>{l.name}</td>
+                    <td style={{padding:"12px 14px",fontSize:13}}>
+                      {isManager
+                        ?<span style={{display:"inline-block",padding:"3px 12px",borderRadius:20,background:T.accentLight,color:T.accent,fontSize:12.5,fontWeight:600}}>{l.dept}</span>
+                        :<span style={{color:T.text2}}>{l.dept}</span>}
+                    </td>
+                    {rs.map((s,i)=><CQCCell key={i} rs={s} joined={l.joined}/>)}
+                  </tr>
+                );
+              })}
+              {/* compliance footer */}
+              <tr style={{background:'#F8FBF8',borderTop:`2px solid ${T.border}`}}>
+                <td colSpan={2} style={{padding:"11px 18px",fontSize:12.5,fontWeight:700,color:T.text2}}>Compliance %</td>
+                {courses.map(c=>{
+                  const pct=Math.round(c.completed/Math.max(c.enrolled,1)*100);
+                  return <td key={c.id} style={{textAlign:"center",padding:"11px 8px",fontSize:13,fontWeight:800,color:pct>=passMark?'#166534':'#DC2626'}}>{pct}%</td>;
+                })}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </>}
+    </div>
+  );
+
+  // ══ DETAIL: TRAINEE SPREADSHEET ══════════════════════════════════════════
+  if(view==='spreadsheet') return (
+    <div style={{padding:"28px 32px",maxWidth:860,margin:"0 auto"}}>
+      <BackBtn/>
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:24,gap:14}}>
+        <div>
+          <h2 style={{fontSize:20,fontWeight:700,color:T.text,margin:"0 0 4px"}}>Trainee Spreadsheet</h2>
+          <p style={{fontSize:13,color:T.text3,margin:0}}>Download a spreadsheet of all trainee courses for a date range.</p>
+        </div>
+        <Btn variant="primary" sm onClick={dlTraineeSpreadsheet}>⬇ Download CSV</Btn>
+      </div>
+      <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:"24px"}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:24}}>
+          <div>
+            <label style={{display:"block",fontSize:12,fontWeight:600,color:T.text2,marginBottom:6,textTransform:"uppercase",letterSpacing:".04em"}}>Start date</label>
+            <input type="date" value={ssStart} onChange={e=>setSsStart(e.target.value)} style={{...fldStyle,width:"100%"}}/>
           </div>
-          <table style={{width:"100%",borderCollapse:"collapse"}}>
-            <thead><tr>{["Course","Assigned","In Progress","Completed","Certs"].map(h=><th key={h} style={{textAlign:"left",padding:"10px 16px",fontSize:11.5,color:T.text3,fontWeight:600,borderBottom:`1px solid ${T.border}`,background:T.bg}}>{h}</th>)}</tr></thead>
-            <tbody>{courses.map(c=>{
-              const isHL=highlightId===c.id;
-              return(
-              <tr key={c.id} style={{background:isHL?T.accentLight:"transparent",transition:"background .2s"}}
-                onMouseEnter={e=>e.currentTarget.style.background=isHL?T.accentLight:T.bg}
-                onMouseLeave={e=>e.currentTarget.style.background=isHL?T.accentLight:"transparent"}>
-                <td style={{padding:"12px 16px",fontWeight:isHL?700:500,color:isHL?T.accent2:T.text}}>
-                  {isHL&&<span style={{marginRight:6,fontSize:11,background:T.accent,color:"#fff",padding:"2px 7px",borderRadius:10,verticalAlign:"middle"}}>Selected</span>}
-                  {c.emoji} {c.name}
-                </td>
-                <td style={{padding:"12px 16px",fontWeight:700}}>{c.enrolled}</td>
-                <td style={{padding:"12px 16px"}}>{c.inProgress}</td>
-                <td style={{padding:"12px 16px"}}>{c.completed}/{c.enrolled}</td>
-                <td style={{padding:"12px 16px"}}>{c.certs}</td>
-              </tr>);
-            })}</tbody>
-          </table>
+          <div>
+            <label style={{display:"block",fontSize:12,fontWeight:600,color:T.text2,marginBottom:6,textTransform:"uppercase",letterSpacing:".04em"}}>End date</label>
+            <input type="date" value={ssEnd} onChange={e=>setSsEnd(e.target.value)} style={{...fldStyle,width:"100%"}}/>
+          </div>
+          <div>
+            <label style={{display:"block",fontSize:12,fontWeight:600,color:T.text2,marginBottom:6,textTransform:"uppercase",letterSpacing:".04em"}}>Course / Bundle</label>
+            <select value={ssCourse} onChange={e=>setSsCourse(e.target.value)} style={{...fldStyle,width:"100%"}}>
+              <option value="all">All courses</option>
+              <optgroup label="── Enrolled courses ──">
+                {courses.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+              </optgroup>
+              <optgroup label="── Full catalogue ──">
+                {COURSE_CATALOGUE.map(c=><option key={c.id} value={`cat_${c.id}`}>{c.name}</option>)}
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label style={{display:"block",fontSize:12,fontWeight:600,color:T.text2,marginBottom:6,textTransform:"uppercase",letterSpacing:".04em"}}>Progress</label>
+            <select value={ssArchived} onChange={e=>setSsArchived(e.target.value)} style={{...fldStyle,width:"100%"}}>
+              <option value="all">All course progress</option>
+              <option value="active">Active courses only</option>
+              <option value="archived">Archived courses only</option>
+              <option value="done">Completed only</option>
+              <option value="inprogress">In progress only</option>
+            </select>
+          </div>
+          <div>
+            <label style={{display:"block",fontSize:12,fontWeight:600,color:T.text2,marginBottom:6,textTransform:"uppercase",letterSpacing:".04em"}}>Department</label>
+            <select value={ssDept} onChange={e=>setSsDept(e.target.value)} style={{...fldStyle,width:"100%"}}>
+              {DEPTS.map(d=><option key={d} value={d}>{d==='all'?'All departments':d}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{display:"block",fontSize:12,fontWeight:600,color:T.text2,marginBottom:6,textTransform:"uppercase",letterSpacing:".04em"}}>Trainee</label>
+            <select value={ssTrainee} onChange={e=>setSsTrainee(e.target.value)} style={{...fldStyle,width:"100%"}}>
+              <option value="all">All trainees</option>
+              {learners.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
+            </select>
+          </div>
         </div>
-      )}
-
-      {rtab==="team"&&<TeamMembersReport learners={learners} courses={courses} showToast={showToast}/>}
-
-      {rtab==="cert"&&(
-        <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:20}}>
-          <table style={{width:"100%",borderCollapse:"collapse"}}>
-            <thead><tr>{["Course","Claimed by","Dept","Date","Status"].map(h=><th key={h} style={{textAlign:"left",padding:"10px 12px",fontSize:11.5,color:T.text3,fontWeight:600,borderBottom:`1px solid ${T.border}`}}>{h}</th>)}</tr></thead>
-            <tbody>{certs.map(c=>(<tr key={c.id}>
-              <td style={{padding:"11px 12px",fontSize:12.5}}>{c.courseName}</td>
-              <td style={{padding:"11px 12px",fontSize:12.5,fontWeight:500}}>{c.learnerName}</td>
-              <td style={{padding:"11px 12px",fontSize:12,color:T.text3}}>—</td>
-              <td style={{padding:"11px 12px",fontSize:12,color:T.text3}}>{new Date(c.claimedOn).toLocaleDateString("en-GB")}</td>
-              <td style={{padding:"11px 12px"}}>{statusPill(c.status==="Active"?"Active":c.status==="Expiring"?"Pending":"Deactivated")}</td>
-            </tr>))}</tbody>
-          </table>
-        </div>
-      )}
-
-      {rtab==="activity"&&(
-        <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:20}}>
-          <div className="cst-grid-4" style={{marginBottom:20}}>
-            {[["Avg. watch/user","48m"],["Active users",active.length],["Total visits","2"],["Most active","CT"]].map(([l,v])=>(
-              <div key={l} style={{background:T.bg,borderRadius:10,padding:14,textAlign:"center"}}>
-                <div style={{fontSize:20,fontWeight:700,color:T.text}}>{v}</div>
-                <div style={{fontSize:11.5,color:T.text3,marginTop:2}}>{l}</div>
+        {/* preview table */}
+        {(()=>{
+          const filteredLearners = learners.filter(l=>{
+            if(ssDept!=='all'&&l.dept!==ssDept) return false;
+            if(ssTrainee!=='all'&&l.id!==ssTrainee) return false;
+            if(ssArchived==='active'&&l.status==='Deactivated') return false;
+            if(ssArchived==='archived'&&l.status!=='Deactivated') return false;
+            return true;
+          });
+          const filteredCourses = ssCourse==='all' ? courses :
+            ssCourse.startsWith('cat_') ? [] :
+            courses.filter(c=>c.id===ssCourse);
+          const previewRows = [];
+          filteredLearners.forEach(l=>{
+            (filteredCourses.length>0?filteredCourses:courses).forEach((c,i)=>{
+              const done=courseCompleted(l,courses.indexOf(c));
+              previewRows.push({l,c,done});
+            });
+          });
+          const selectedCourseName = ssCourse==='all'?null:
+            ssCourse.startsWith('cat_')?COURSE_CATALOGUE.find(c=>`cat_${c.id}`===ssCourse)?.name:
+            courses.find(c=>c.id===ssCourse)?.name;
+          return(
+            <div style={{borderTop:`1px solid ${T.border}`,paddingTop:20}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+                <div style={{fontSize:12,fontWeight:600,color:T.text3,textTransform:"uppercase",letterSpacing:".04em"}}>
+                  Preview — {selectedCourseName?`"${selectedCourseName}"`:filteredCourses.length>0?`${filteredCourses.length} course(s)`:'All courses'} · {filteredLearners.length} learner{filteredLearners.length!==1?'s':''}
+                </div>
               </div>
-            ))}
-          </div>
-          <div style={{background:T.bg,borderRadius:10,padding:20,textAlign:"center",color:T.text3,fontSize:13}}>📈 Activity trend — check back after more learners join.</div>
+              {ssCourse.startsWith('cat_')?(
+                <div style={{background:T.accentLight,borderRadius:10,padding:"16px 20px",fontSize:13,color:T.accent2,border:`1px solid ${T.border}`}}>
+                  💡 This course is from our full catalogue. Learners will be shown once enrolled. Click <strong>Download CSV</strong> to export a template.
+                </div>
+              ):(
+                <div className="cst-table-scroll">
+                  <table style={{width:"100%",borderCollapse:"collapse",minWidth:600}}>
+                    <thead><tr style={{background:T.bg}}>
+                      {['Surname','First name','Email','Department','Course','Enrolled','Completed','Score'].map(h=>(
+                        <th key={h} style={{textAlign:"left",padding:"9px 12px",fontSize:11,fontWeight:700,color:T.text2,borderBottom:`1px solid ${T.border}`}}>{h}</th>
+                      ))}
+                    </tr></thead>
+                    <tbody>
+                      {previewRows.slice(0,8).map(({l,c,done},ri)=>{
+                        const [fn,...rest]=l.name.split(' ');
+                        return <tr key={ri} style={{borderBottom:`1px solid ${T.border}`}}>
+                          <td style={{padding:"9px 12px",fontSize:12.5,color:T.text}}>{rest.join(' ')}</td>
+                          <td style={{padding:"9px 12px",fontSize:12.5,color:T.text}}>{fn}</td>
+                          <td style={{padding:"9px 12px",fontSize:12,color:T.text3}}>{l.email}</td>
+                          <td style={{padding:"9px 12px",fontSize:12,color:T.text3}}>{l.dept}</td>
+                          <td style={{padding:"9px 12px",fontSize:12,color:T.text}}>{c.name}</td>
+                          <td style={{padding:"9px 12px",fontSize:12,color:T.text3}}>{new Date(l.joined).toLocaleDateString('en-GB')}</td>
+                          <td style={{padding:"9px 12px",fontSize:12}}><span style={{color:done?'#166534':'#DC2626',fontWeight:600}}>{done?'Yes':'No'}</span></td>
+                          <td style={{padding:"9px 12px",fontSize:12,color:T.text3}}>{done?`${l.progress}%`:''}</td>
+                        </tr>;
+                      })}
+                    </tbody>
+                  </table>
+                  {previewRows.length>8&&<div style={{padding:"10px 12px",fontSize:12,color:T.text3}}>…and {previewRows.length-8} more rows in the download.</div>}
+                </div>
+              )}
+            </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+
+  // ══ DETAIL: TRAINING RECORDS ══════════════════════════════════════════════
+  if(view==='records') return (
+    <div style={{padding:"28px 32px",maxWidth:860,margin:"0 auto"}}>
+      <BackBtn/>
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:24,gap:14}}>
+        <div>
+          <h2 style={{fontSize:20,fontWeight:700,color:T.text,margin:"0 0 4px"}}>Training Records</h2>
+          <p style={{fontSize:13,color:T.text3,margin:0}}>Full per-learner training history. Suitable for CQC inspection.</p>
         </div>
-      )}
+        <Btn variant="primary" sm onClick={dlTrainingRecords}>⬇ Download CSV</Btn>
+      </div>
+      <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:"24px",marginBottom:16}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
+          <div style={{flex:1}}>
+            <label style={{display:"block",fontSize:12,fontWeight:600,color:T.text2,marginBottom:6,textTransform:"uppercase",letterSpacing:".04em"}}>Trainee</label>
+            <select value={recLearner} onChange={e=>setRecLearner(e.target.value)} style={{...fldStyle,width:"100%"}}>
+              <option value="all">All trainees</option>
+              {learners.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="cst-table-scroll">
+          <table style={{width:"100%",borderCollapse:"collapse",minWidth:560}}>
+            <thead><tr style={{background:T.bg}}>
+              {['Trainee','Department','Course','Enrolled','Completed','Score (%)','Certificate'].map(h=>(
+                <th key={h} style={{textAlign:"left",padding:"9px 12px",fontSize:11,fontWeight:700,color:T.text2,borderBottom:`1px solid ${T.border}`}}>{h}</th>
+              ))}
+            </tr></thead>
+            <tbody>
+              {learners.filter(l=>recLearner==='all'||l.id===recLearner).map(l=>
+                courses.map((c,ci)=>{
+                  const s=lStatus(l,c);
+                  const cert=certs.find(ct=>ct.learnerId===l.id&&ct.courseId===c.id);
+                  return <tr key={`${l.id}-${c.id}`} style={{borderBottom:`1px solid ${T.border}`}}>
+                    {ci===0&&<td rowSpan={courses.length} style={{padding:"11px 12px",fontSize:13,fontWeight:600,color:T.text,verticalAlign:"top",borderRight:`1px solid ${T.border}`}}>{l.name}<br/><span style={{fontSize:11,color:T.text3,fontWeight:400}}>{l.dept}</span></td>}
+                    {ci===0&&<td rowSpan={courses.length} style={{padding:"11px 12px",fontSize:12,color:T.text3,verticalAlign:"top",borderRight:`1px solid ${T.border}`}}>{l.dept}</td>}
+                    <td style={{padding:"9px 12px",fontSize:12.5,color:T.text}}>{c.name}</td>
+                    <td style={{padding:"9px 12px",fontSize:12,color:T.text3}}>{new Date(l.joined).toLocaleDateString('en-GB')}</td>
+                    <td style={{padding:"9px 12px",fontSize:12}}><span style={{color:s==='Passed'?'#166534':'#92400E',fontWeight:600}}>{s==='Passed'?'Yes':'No'}</span></td>
+                    <td style={{padding:"9px 12px",fontSize:12,color:T.text3}}>{s==='Passed'?`${l.progress}%`:''}</td>
+                    <td style={{padding:"9px 12px",fontSize:12,color:T.text3}}>{cert?new Date(cert.claimedOn).toLocaleDateString('en-GB'):'—'}</td>
+                  </tr>;
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ══ LANDING: CARDS ════════════════════════════════════════════════════════
+  const CARDS=[
+    {id:'compliance',title:'Compliance Matrix',desc:'View the full compliance status across all learners and courses. Filter by pass mark and status. CQC-ready.',icon:ICONS.check},
+    {id:'spreadsheet',title:'Trainee Spreadsheet',desc:'Download a spreadsheet of all your trainees\' courses for a set date range.',icon:ICONS.book},
+    {id:'records',title:'Training Records',desc:'Download a full training history per learner — suitable for CQC inspection folders.',icon:ICONS.cert},
+  ];
+
+  return (
+    <div style={{padding:"28px 32px",maxWidth:860,margin:"0 auto"}}>
+      <div style={{marginBottom:28}}>
+        <h1 style={{fontSize:22,fontWeight:700,color:T.text,margin:"0 0 5px"}}>Reports & Records</h1>
+        <p style={{fontSize:13.5,color:T.text2,margin:0}}>CQC-ready compliance reports and trainee activity exports.</p>
+      </div>
+      {/* stat row */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,marginBottom:32}}>
+        {[
+          {label:'Total Enrolments',value:totalEnrolled,color:T.accent},
+          {label:'Completed',value:totalCompleted,color:'#166534'},
+          {label:'In Progress',value:totalInProgress,color:'#92400E'},
+          {label:'Compliance Rate',value:`${compliancePct}%`,color:compliancePct>=80?'#166534':'#92400E'},
+        ].map(s=>(
+          <div key={s.label} style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:"18px 20px"}}>
+            <div style={{fontSize:26,fontWeight:800,color:s.color,marginBottom:4}}>{s.value}</div>
+            <div style={{fontSize:12,color:T.text3}}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+      {/* report cards */}
+      <div style={{display:"flex",flexDirection:"column",gap:12}}>
+        {CARDS.map(card=>(
+          <div key={card.id} onClick={()=>setView(card.id)}
+            style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:"22px 24px",display:"flex",alignItems:"center",gap:20,cursor:"pointer",transition:"box-shadow .15s,border-color .15s"}}
+            onMouseEnter={e=>{e.currentTarget.style.boxShadow="0 4px 16px rgba(0,0,0,.08)";e.currentTarget.style.borderColor=T.accent;}}
+            onMouseLeave={e=>{e.currentTarget.style.boxShadow="none";e.currentTarget.style.borderColor=T.border;}}>
+            <div style={{width:48,height:48,borderRadius:12,background:T.accentLight,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <Icon d={card.icon} size={20} color={T.accent}/>
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:700,color:T.text,marginBottom:4}}>{card.title}</div>
+              <div style={{fontSize:13,color:T.text3,lineHeight:1.6}}>{card.desc}</div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke={T.text3} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -1434,6 +2074,25 @@ function QuoteSuccessModal({onClose}){
   );
 }
 
+function VATContactModal({onClose}){
+  return(
+    <div onClick={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:300,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+      <div style={{background:"#fff",borderRadius:20,padding:"44px 36px 36px",maxWidth:420,width:"100%",boxShadow:"0 24px 60px rgba(0,0,0,.18)",animation:"fadeUp .2s ease",textAlign:"center"}}>
+        <div style={{width:72,height:72,borderRadius:"50%",border:"2px solid #FCD34D",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 28px",fontSize:30}}>🌍</div>
+        <div style={{fontSize:22,fontWeight:700,color:T.text,marginBottom:16}}>VAT enquiry</div>
+        <div style={{fontSize:14,color:T.text2,lineHeight:1.7,marginBottom:10}}>
+          Our orders include VAT at the current UK rate (20%).
+        </div>
+        <div style={{fontSize:14,color:T.text2,lineHeight:1.7,marginBottom:32}}>
+          If you are based outside of the UK and need VAT adjusted, please contact us at:{" "}
+          <strong>info@careskillstraining.org</strong>
+        </div>
+        <button onClick={onClose} style={{padding:"12px 48px",borderRadius:10,border:`1px solid ${T.border}`,background:T.bg,color:T.text2,fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:T.font}}>Close</button>
+      </div>
+    </div>
+  );
+}
+
 function DiscountModal({onClose}){
   return(
     <div onClick={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:300,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
@@ -1461,6 +2120,7 @@ function CourseShop({showToast}){
   const [cart,setCart]=useState([]);
   const [quoteModal,setQuoteModal]=useState(false);
   const [customQuoteModal,setCustomQuoteModal]=useState(false);
+  const [vatModal,setVatModal]=useState(false);
   const [qtyInputs,setQtyInputs]=useState({});
   const dropRef=React.useRef(null);
   React.useEffect(()=>{
@@ -1480,16 +2140,10 @@ function CourseShop({showToast}){
   const total=afterDiscount+vat;
   return(
     <div style={{padding:"32px 28px",maxWidth:960,margin:"0 auto"}}>
-      <div style={{background:"#FFFBEB",borderLeft:"4px solid #F59E0B",borderRadius:"0 8px 8px 0",padding:"14px 18px",marginBottom:24,fontSize:13,lineHeight:1.6,color:"#92400E"}}>
-        <strong>Need to pay different VAT?</strong><br/>
-        Our orders include VAT at the current UK rate (20%). If you are based outside of the UK, please contact us at <a href="mailto:info@careskillstraining.org" style={{color:"#92400E"}}>info@careskillstraining.org</a>.
+      <div style={{background:T.navy,borderRadius:12,padding:"12px 20px",display:"inline-block",marginBottom:20,fontSize:14,lineHeight:1.6,color:"#fff",width:"100%",boxSizing:"border-box",textAlign:"center"}}>
+        One licence = <strong>one team member</strong> gets access to <strong>one specific course</strong>.
       </div>
-      <p style={{color:T.text2,fontSize:13.5,lineHeight:1.7,marginBottom:4}}>Search for courses and set the quantity you need.</p>
-      <p style={{color:T.text2,fontSize:13.5,lineHeight:1.7,marginBottom:4}}>Select <strong>"Request a quote"</strong> to receive a quote from our team via email.</p>
-      <p style={{color:T.text2,fontSize:13.5,lineHeight:1.7,marginBottom:20}}>Select <strong>"Continue to checkout"</strong> to place your order directly.</p>
-      <div style={{display:"flex",alignItems:"center",gap:8,background:"#EEF2FF",borderLeft:`3px solid ${T.accent}`,borderRadius:"0 8px 8px 0",padding:"12px 16px",marginBottom:28,fontSize:13,color:T.accent2}}>
-        💡 You can add multiple courses in a single order.
-      </div>
+      <p style={{color:T.text2,fontSize:13.5,lineHeight:1.7,marginBottom:28,textAlign:"center"}}>Search for courses and set the quantity you need.</p>
       <div ref={dropRef} style={{position:"relative",marginBottom:28}}>
         <div onClick={()=>setDropOpen(o=>!o)} style={{display:"flex",alignItems:"center",gap:10,border:`2px solid ${dropOpen?T.accent:T.border}`,borderRadius:10,padding:"13px 16px",background:T.white,cursor:"pointer",transition:"border .15s"}}>
           <Icon d={ICONS.search} size={15} color={T.text3}/>
@@ -1536,7 +2190,7 @@ function CourseShop({showToast}){
                 ))}
                 {tier.pct>0&&(
                   <tr style={{background:T.greenBg}}>
-                    <td colSpan={2} style={{padding:"11px 16px",fontSize:13,fontWeight:700,color:T.green}}>{tier.pct}% discount — {totalQty}+ courses</td>
+                    <td colSpan={2} style={{padding:"11px 16px",fontSize:13,fontWeight:700,color:T.green}}>{tier.pct}% discount — {totalQty}+ licences</td>
                     <td style={{padding:"11px 16px",textAlign:"right",fontSize:13,fontWeight:700,color:T.green,whiteSpace:"nowrap"}}>−£{discountAmt.toFixed(2)}</td>
                     <td></td>
                   </tr>
@@ -1557,6 +2211,7 @@ function CourseShop({showToast}){
               {tier.pct>0&&(<div style={{display:"flex",justifyContent:"space-between",fontSize:13.5,marginBottom:8}}><span style={{color:T.greenMid}}>{tier.pct}% discount</span><span style={{fontWeight:600,color:T.greenMid}}>−£{discountAmt.toFixed(2)}</span></div>)}
               <div style={{display:"flex",justifyContent:"space-between",fontSize:13.5,marginBottom:14,color:T.text2}}><span>VAT (UK, 20%)</span><span style={{fontWeight:600,color:T.text}}>£{vat.toFixed(2)}</span></div>
               <div style={{display:"flex",justifyContent:"space-between",fontSize:16,fontWeight:800,color:T.text,paddingTop:12,borderTop:`2px solid ${T.border}`}}><span>TOTAL</span><span>£{total.toFixed(2)}</span></div>
+              <div style={{marginTop:14,paddingTop:12,borderTop:`1px solid ${T.border}`,fontSize:12,color:"#92400E",lineHeight:1.5}}>VAT applied at UK rate (20%). Based outside the UK? <button onClick={()=>setVatModal(true)} style={{background:"none",border:"none",color:"#92400E",fontWeight:600,fontSize:12,cursor:"pointer",padding:0,fontFamily:T.font}}>Contact us</button>.</div>
             </div>
           )}
         </div>
@@ -1569,6 +2224,7 @@ function CourseShop({showToast}){
       )}
       {quoteModal&&<QuoteSuccessModal onClose={()=>setQuoteModal(false)}/>}
       {customQuoteModal&&<CustomQuoteModal onClose={()=>setCustomQuoteModal(false)}/>}
+      {vatModal&&<VATContactModal onClose={()=>setVatModal(false)}/>}
     </div>
   );
 }
@@ -1605,6 +2261,7 @@ function LicenceShop({showToast}){
   const [qtyInput,setQtyInput]=useState(null);
   const [quoteModal,setQuoteModal]=useState(false);
   const [customQuoteModal,setCustomQuoteModal]=useState(false);
+  const [vatModal,setVatModal]=useState(false);
   const BASE=59;
   const displayQty=qtyInput===''?1:qty;
   const tier=getTier(displayQty);
@@ -1615,10 +2272,6 @@ function LicenceShop({showToast}){
   const saving=tier.pct?BASE*displayQty-subtotal:0;
   return(
     <div style={{padding:"40px 28px",maxWidth:860,margin:"0 auto"}}>
-      <div style={{background:"#FFFBEB",borderLeft:"4px solid #F59E0B",borderRadius:"0 8px 8px 0",padding:"14px 18px",marginBottom:28,fontSize:13,lineHeight:1.6,color:"#92400E"}}>
-        <strong>Need to pay different VAT?</strong><br/>
-        Our orders include VAT at the current UK rate (20%). If you are based outside of the UK, please contact us at <a href="mailto:info@careskillstraining.org" style={{color:"#92400E"}}>info@careskillstraining.org</a>.
-      </div>
       <div style={{background:`linear-gradient(135deg,${T.navy} 0%,#1E3F7A 100%)`,borderRadius:20,padding:"44px 48px 40px",marginBottom:32,color:"#fff",position:"relative",overflow:"hidden",textAlign:"center"}}>
         {/* background blobs */}
         <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",background:"rgba(255,255,255,.05)",pointerEvents:"none"}}/>
@@ -1714,6 +2367,7 @@ function LicenceShop({showToast}){
             {tier.pct>0&&(<div style={{display:"flex",justifyContent:"space-between",fontSize:13.5,marginBottom:8}}><span style={{color:T.greenMid}}>{tier.pct}% discount</span><span style={{fontWeight:600,color:T.greenMid}}>−£{saving.toFixed(2)}</span></div>)}
             <div style={{display:"flex",justifyContent:"space-between",fontSize:13.5,marginBottom:14,color:T.text2}}><span>VAT (UK, 20%)</span><span style={{fontWeight:600,color:T.text}}>£{vat.toFixed(2)}</span></div>
             <div style={{display:"flex",justifyContent:"space-between",fontSize:16,fontWeight:800,color:T.text,paddingTop:12,borderTop:`2px solid ${T.border}`}}><span>TOTAL</span><span>£{total.toFixed(2)}</span></div>
+            <div style={{marginTop:14,paddingTop:12,borderTop:`1px solid ${T.border}`,fontSize:12,color:"#92400E",lineHeight:1.5}}>VAT applied at UK rate (20%). Based outside the UK? <button onClick={()=>setVatModal(true)} style={{background:"none",border:"none",color:"#92400E",fontWeight:600,fontSize:12,cursor:"pointer",padding:0,fontFamily:T.font}}>Contact us</button>.</div>
           </div>
         )}
       </div>
@@ -1725,6 +2379,7 @@ function LicenceShop({showToast}){
       )}
       {quoteModal&&<QuoteSuccessModal onClose={()=>setQuoteModal(false)}/>}
       {customQuoteModal&&<CustomQuoteModal onClose={()=>setCustomQuoteModal(false)}/>}
+      {vatModal&&<VATContactModal onClose={()=>setVatModal(false)}/>}
     </div>
   );
 }
@@ -1737,12 +2392,12 @@ function PageSubscription({settings,setSettings,learners,setPage,showToast}){
       <div style={{background:T.white,borderBottom:`1px solid ${T.border}`,padding:"44px 28px 0",textAlign:"center"}}>
         <div style={{fontSize:11,fontWeight:700,color:T.accent,letterSpacing:".1em",textTransform:"uppercase",marginBottom:12}}>Pricing</div>
         <h1 style={{fontSize:30,fontWeight:800,color:T.text,marginBottom:10,letterSpacing:"-.8px",lineHeight:1.2,fontFamily:T.font}}>Simple, transparent pricing</h1>
-        <p style={{fontSize:15,color:T.text2,maxWidth:480,margin:"0 auto 20px",lineHeight:1.65,fontFamily:T.font}}>Buy individual courses or give your whole team unlimited access with a licence.</p>
+        <p style={{fontSize:15,color:T.text2,maxWidth:480,margin:"0 auto 20px",lineHeight:1.65,fontFamily:T.font}}>Buy a Single Course Licence, or unlock all 300+ courses for each team member with an All Courses Licence.</p>
         <button onClick={()=>setShowDiscount(true)} style={{display:"inline-flex",alignItems:"center",gap:6,border:`1.5px solid ${T.border}`,borderRadius:20,padding:"7px 18px",background:T.white,cursor:"pointer",fontSize:13,fontWeight:600,color:T.text2,marginBottom:28,fontFamily:T.font}} onMouseEnter={e=>e.currentTarget.style.borderColor=T.accent2} onMouseLeave={e=>e.currentTarget.style.borderColor=T.border}>
           🏷️ See our discounts
         </button>
         <div style={{display:"flex",justifyContent:"center",gap:0,marginBottom:-1}}>
-          {[["courses","Individual Courses"],["licences","Team Licences"]].map(([v,l])=>(
+          {[["courses","Single Course Licence"],["licences","All Courses Licence"]].map(([v,l])=>(
             <button key={v} onClick={()=>setTab(v)} style={{padding:"12px 32px",fontSize:14,fontWeight:tab===v?700:400,color:tab===v?T.accent:T.text3,background:"none",border:"none",borderBottom:`2px solid ${tab===v?T.accent:"transparent"}`,cursor:"pointer",fontFamily:T.font,transition:"all .15s"}}>{l}</button>
           ))}
         </div>
