@@ -2032,21 +2032,19 @@ const COURSE_CATALOGUE = [
   {id:"C50",name:"Safeguarding Adults Level 3",price:29.99},
 ];
 
-// Licence tiers — 50+ is custom (enterprise)
 const VOL_TIERS = [
-  {min:1,  max:4,        pct:0,    label:"Standard"},
-  {min:5,  max:9,        pct:20,   label:"20% off"},
-  {min:10, max:24,       pct:25,   label:"25% off"},
-  {min:25, max:49,       pct:30,   label:"30% off"},
-  {min:50, max:Infinity, pct:null, label:"Custom"},
+  {min:1,  max:4,        pct:0,  label:"Standard"},
+  {min:5,  max:9,        pct:20, label:"20% off"},
+  {min:10, max:24,       pct:25, label:"25% off"},
+  {min:25, max:49,       pct:30, label:"30% off"},
+  {min:50, max:Infinity, pct:35, label:"35% off"},
 ];
-// Course tiers — 50+ is custom pricing
 const COURSE_TIERS = [
-  {min:1,  max:4,        pct:0,    label:"Standard"},
-  {min:5,  max:9,        pct:20,   label:"20% off"},
-  {min:10, max:24,       pct:25,   label:"25% off"},
-  {min:25, max:49,       pct:30,   label:"30% off"},
-  {min:50, max:Infinity, pct:null, label:"Custom"},
+  {min:1,  max:4,        pct:0,  label:"Standard"},
+  {min:5,  max:9,        pct:20, label:"20% off"},
+  {min:10, max:24,       pct:25, label:"25% off"},
+  {min:25, max:49,       pct:30, label:"30% off"},
+  {min:50, max:Infinity, pct:35, label:"35% off"},
 ];
 function getTier(qty){return VOL_TIERS.find(t=>qty>=t.min&&qty<=t.max)||VOL_TIERS[0];}
 function getCourseTier(qty){return COURSE_TIERS.find(t=>qty>=t.min&&qty<=t.max)||COURSE_TIERS[0];}
@@ -2140,10 +2138,17 @@ function CourseShop({showToast}){
   const total=afterDiscount+vat;
   return(
     <div style={{padding:"32px 28px",maxWidth:960,margin:"0 auto"}}>
-      <div style={{background:T.navy,borderRadius:12,padding:"12px 20px",display:"inline-block",marginBottom:20,fontSize:14,lineHeight:1.6,color:"#fff",width:"100%",boxSizing:"border-box",textAlign:"center"}}>
-        One licence = <strong>one team member</strong> gets access to <strong>one specific course</strong>.
+      <div style={{textAlign:"center",marginBottom:36}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:10,background:"linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 100%)",border:"1px solid rgba(99,130,255,.18)",borderRadius:14,padding:"14px 24px",boxShadow:"0 1px 3px rgba(99,130,255,.08)"}}>
+          <div style={{width:32,height:32,borderRadius:10,background:"linear-gradient(135deg,#4F6EF7 0%,#6A3DE8 100%)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 8c-3.33 0-5 1.34-5 2v1h10v-1c0-.66-1.67-2-5-2z" fill="#fff"/></svg>
+          </div>
+          <span style={{fontSize:14,color:"#1a1a2e",lineHeight:1.5}}>
+            One licence = <span style={{fontWeight:650,color:"#4F6EF7"}}>one team member</span> gets access to <span style={{fontWeight:650,color:"#4F6EF7"}}>one specific course</span>
+          </span>
+        </div>
+        <p style={{color:T.text3,fontSize:13,lineHeight:1.7,marginTop:14,marginBottom:0,letterSpacing:".01em"}}>Search for courses and set the quantity you need.</p>
       </div>
-      <p style={{color:T.text2,fontSize:13.5,lineHeight:1.7,marginBottom:28,textAlign:"center"}}>Search for courses and set the quantity you need.</p>
       <div ref={dropRef} style={{position:"relative",marginBottom:28}}>
         <div onClick={()=>setDropOpen(o=>!o)} style={{display:"flex",alignItems:"center",gap:10,border:`2px solid ${dropOpen?T.accent:T.border}`,borderRadius:10,padding:"13px 16px",background:T.white,cursor:"pointer",transition:"border .15s"}}>
           <Icon d={ICONS.search} size={15} color={T.text3}/>
@@ -2265,55 +2270,33 @@ function LicenceShop({showToast}){
   const BASE=59;
   const displayQty=qtyInput===''?1:qty;
   const tier=getTier(displayQty);
-  const unitPrice=tier.pct===null?null:BASE*(1-tier.pct/100);
-  const subtotal=unitPrice!==null?unitPrice*displayQty:null;
-  const vat=subtotal!==null?subtotal*0.2:null;
-  const total=subtotal!==null?subtotal+vat:null;
+  const unitPrice=BASE*(1-tier.pct/100);
+  const subtotal=unitPrice*displayQty;
+  const vat=subtotal*0.2;
+  const total=subtotal+vat;
   const saving=tier.pct?BASE*displayQty-subtotal:0;
   return(
     <div style={{padding:"40px 28px",maxWidth:860,margin:"0 auto"}}>
-      <div style={{background:`linear-gradient(135deg,${T.navy} 0%,#1E3F7A 100%)`,borderRadius:20,padding:"44px 48px 40px",marginBottom:32,color:"#fff",position:"relative",overflow:"hidden",textAlign:"center"}}>
-        {/* background blobs */}
-        <div style={{position:"absolute",top:-60,right:-60,width:220,height:220,borderRadius:"50%",background:"rgba(255,255,255,.05)",pointerEvents:"none"}}/>
-        <div style={{position:"absolute",bottom:-80,left:-40,width:180,height:180,borderRadius:"50%",background:"rgba(255,255,255,.03)",pointerEvents:"none"}}/>
-
-        <div style={{position:"relative"}}>
-          {/* label */}
-          <div style={{display:"inline-block",background:"rgba(255,255,255,.1)",borderRadius:20,padding:"4px 14px",fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",marginBottom:20}}>Team Licence Plan</div>
-
-          {/* price block */}
-          <div style={{marginBottom:8}}>
-            <div style={{display:"flex",alignItems:"flex-end",justifyContent:"center",gap:4,lineHeight:1}}>
-              <span style={{fontSize:72,fontWeight:900,letterSpacing:"-3px"}}>£59</span>
-              <div style={{marginBottom:10,textAlign:"left"}}>
-                <div style={{fontSize:17,fontWeight:600,opacity:.75}}>per licence</div>
-                <div style={{fontSize:13,opacity:.5}}>per year</div>
-              </div>
-            </div>
-            <div style={{fontSize:12,opacity:.35,textDecoration:"line-through",marginTop:4}}>Was £999/year</div>
+      <div style={{background:"linear-gradient(135deg,#F7F8FF 0%,#EEF2FF 100%)",borderRadius:20,padding:"28px 32px",marginBottom:28,position:"relative",overflow:"hidden",border:"1px solid rgba(99,120,255,.12)",boxShadow:"0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(99,120,255,.07)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:24}}>
+        <div style={{position:"absolute",top:0,left:0,right:0,height:1,background:"linear-gradient(90deg,transparent,rgba(99,120,255,.25),transparent)",pointerEvents:"none"}}/>
+        {/* left — description */}
+        <div style={{flex:1,minWidth:0}}>
+<div style={{fontSize:18,fontWeight:700,color:"#1a1a2e",lineHeight:1.45,letterSpacing:"-.3px"}}>
+            Get access to{" "}
+            <span style={{background:"linear-gradient(90deg,#4F6EF7,#7C3AED)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>300+ courses</span>
+            {" "}with Careskills Unlimited
           </div>
-
-          {/* plain-english tagline */}
-          <div style={{background:"rgba(255,255,255,.08)",borderRadius:12,padding:"12px 20px",display:"inline-block",marginBottom:28,fontSize:14,lineHeight:1.6,opacity:.9}}>
-            One licence = <strong>one team member</strong> gets access to <strong>all 300+ courses</strong> for a full year.
+        </div>
+        {/* divider */}
+        <div style={{width:1,alignSelf:"stretch",background:"rgba(99,120,255,.15)",flexShrink:0}}/>
+        {/* right — price */}
+        <div style={{textAlign:"center",flexShrink:0,minWidth:140}}>
+          <div style={{fontSize:11,fontWeight:600,letterSpacing:".08em",textTransform:"uppercase",color:"#9CA3AF",marginBottom:4}}>From</div>
+          <div style={{display:"flex",alignItems:"flex-start",justifyContent:"center",lineHeight:1,gap:1}}>
+            <span style={{fontSize:14,fontWeight:700,color:"#4F6EF7",marginTop:5}}>£</span>
+            <span style={{fontSize:42,fontWeight:800,letterSpacing:"-2px",background:"linear-gradient(135deg,#4F6EF7,#7C3AED)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>3.20</span>
           </div>
-
-          {/* divider */}
-          <div style={{borderTop:"1px solid rgba(255,255,255,.12)",paddingTop:24}}>
-            <div style={{maxWidth:540,margin:"0 auto 0 10%",textAlign:"left"}}>
-            <div style={{fontSize:11,fontWeight:700,letterSpacing:".1em",textTransform:"uppercase",opacity:.4,marginBottom:18,textAlign:"center"}}>What's included</div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px 48px",textAlign:"left"}}>
-              {["300+ Premium Courses","Unlimited Digital Certificates","Compliance Reporting","Team Progress Dashboard","Priority Support","Dedicated Account Manager"].map(label=>(
-                <div key={label} style={{display:"flex",alignItems:"center",gap:10,fontSize:13.5,fontWeight:500}}>
-                  <div style={{width:22,height:22,borderRadius:"50%",background:"#22C55E",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>
-                  <span>{label}</span>
-                </div>
-              ))}
-            </div>
-            </div>
-          </div>
+          <div style={{fontSize:12,color:"#6B7280",marginTop:2,lineHeight:1.4}}>per user / month</div>
         </div>
       </div>
       <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:"24px 24px 20px",marginBottom:24}}>
@@ -2321,19 +2304,19 @@ function LicenceShop({showToast}){
         <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:8}}>
           {VOL_TIERS.map(t=>{
             const active=tier.min===t.min;
-            const ep=t.pct===null?null:BASE*(1-t.pct/100);
+            const ep=BASE*(1-t.pct/100);
             return(
               <div key={t.min} style={{padding:"14px 10px",borderRadius:10,background:active?T.navy:"transparent",border:`1.5px solid ${active?T.navy:T.border}`,textAlign:"center",transition:"all .15s"}}>
                 <div style={{fontSize:10.5,color:active?"rgba(255,255,255,.55)":T.text3,marginBottom:4,fontWeight:600}}>{t.max===Infinity?`${t.min}+`:`${t.min}${t.max>t.min?"-"+t.max:""}`} licences</div>
-                <div style={{fontSize:15,fontWeight:800,color:active?"#fff":t.pct===null?T.purple:t.pct===0?T.text:T.greenMid}}>{t.pct===null?"Custom":`£${ep!==null?ep.toFixed(2):"-"}`}</div>
+                <div style={{fontSize:15,fontWeight:800,color:active?"#fff":t.pct===0?T.text:T.greenMid}}>{`£${(ep/12).toFixed(2)}/mo`}</div>
                 {t.pct>0&&<div style={{fontSize:10,color:active?"rgba(255,255,255,.5)":T.greenMid,marginTop:3,fontWeight:600}}>{t.pct}% off</div>}
-                {t.pct===null&&<div style={{fontSize:10,color:active?"rgba(255,255,255,.5)":T.purple,marginTop:3,fontWeight:600}}>Contact us</div>}
+                <div style={{fontSize:10,color:active?"rgba(255,255,255,.4)":T.text3,marginTop:2}}>£{ep.toFixed(2)}/yr</div>
               </div>
             );
           })}
         </div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:qty>=50?"1fr":"1fr 260px",gap:20,alignItems:"start",maxWidth:qty>=50?620:"unset",margin:qty>=50?"0 auto":"0"}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 260px",gap:20,alignItems:"start"}}>
         <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:"24px"}}>
           <div style={{fontSize:14,fontWeight:700,color:T.text,marginBottom:18}}>How many licences do you need?</div>
           <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:18}}>
@@ -2342,7 +2325,7 @@ function LicenceShop({showToast}){
               <input type="number" value={qtyInput!==null?qtyInput:qty} min={1} max={999} onChange={e=>{setQtyInput(e.target.value);const v=parseInt(e.target.value);if(!isNaN(v)&&v>=1&&v<=999)setQty(v);}} onBlur={()=>{setQtyInput(null);if(!qty||qty<1)setQty(1);}} style={{width:60,height:44,border:"none",textAlign:"center",fontSize:16,fontWeight:700,fontFamily:T.font,outline:"none",color:T.text}}/>
               <button onClick={()=>setQty(q=>q+1)} style={{width:44,height:44,border:"none",background:T.bg,cursor:"pointer",fontSize:22,color:T.text2,lineHeight:1}}>+</button>
             </div>
-            <span style={{fontSize:13.5,color:T.text2}}>× <strong style={{color:T.text}}>£{unitPrice!==null?unitPrice.toFixed(2):"custom"}</strong>/licence/year</span>
+            <span style={{fontSize:13.5,color:T.text2}}>× <strong style={{color:T.text}}>£{(unitPrice/12).toFixed(2)}</strong>/user/mo <span style={{opacity:.55,fontSize:12}}>(£{unitPrice.toFixed(2)}/yr billed annually)</span></span>
           </div>
           <input type="range" min={1} max={99} value={Math.min(qty,99)} onChange={e=>setQty(Number(e.target.value))} style={{width:"100%",accentColor:T.accent,cursor:"pointer",marginBottom:6}}/>
           <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:T.text3,marginBottom:16}}><span>1</span><span>5</span><span>10</span><span>25</span><span>50+</span></div>
@@ -2352,17 +2335,11 @@ function LicenceShop({showToast}){
               <span><strong>{tier.pct}% discount applied</strong> — you save £{saving.toFixed(2)}/year</span>
             </div>
           )}
-          {qty>=50&&(
-            <div style={{background:T.purpleBg,border:`1px solid #C4B5FD`,borderRadius:10,padding:"14px 16px",marginTop:14}}>
-              <div style={{fontSize:13.5,fontWeight:700,color:T.purple,marginBottom:4}}>50+ licences — Custom pricing</div>
-              <div style={{fontSize:12.5,color:T.purple,opacity:.8,lineHeight:1.5,marginBottom:12}}>For large teams, we offer tailored pricing with dedicated account management.</div>
-              <Btn variant="outline" sm onClick={()=>setCustomQuoteModal(true)}>Request Custom Quote</Btn>
-            </div>
-          )}
         </div>
-        {qty<50&&total!==null&&(
+        {total!==null&&(
           <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:"20px 22px",position:"sticky",top:72}}>
             <div style={{fontSize:14,fontWeight:700,color:T.text,marginBottom:16,paddingBottom:12,borderBottom:`1px solid ${T.border}`}}>Order summary</div>
+            <div style={{fontSize:11,color:T.text3,marginBottom:10}}>Billed annually · cancel anytime</div>
             <div style={{display:"flex",justifyContent:"space-between",fontSize:13.5,marginBottom:8,color:T.text2}}><span>{displayQty} licence{displayQty>1?"s":""}</span><span style={{fontWeight:600,color:T.text}}>£{(BASE*displayQty).toFixed(2)}</span></div>
             {tier.pct>0&&(<div style={{display:"flex",justifyContent:"space-between",fontSize:13.5,marginBottom:8}}><span style={{color:T.greenMid}}>{tier.pct}% discount</span><span style={{fontWeight:600,color:T.greenMid}}>−£{saving.toFixed(2)}</span></div>)}
             <div style={{display:"flex",justifyContent:"space-between",fontSize:13.5,marginBottom:14,color:T.text2}}><span>VAT (UK, 20%)</span><span style={{fontWeight:600,color:T.text}}>£{vat.toFixed(2)}</span></div>
@@ -2371,12 +2348,10 @@ function LicenceShop({showToast}){
           </div>
         )}
       </div>
-      {qty<50&&(
-        <div style={{display:"flex",justifyContent:"flex-end",gap:10,marginTop:28,paddingTop:20,borderTop:`1px solid ${T.border}`}}>
-          <Btn variant="outline" onClick={()=>setQuoteModal(true)}>Request a quote</Btn>
-          <Btn variant="accent" onClick={()=>showToast("Redirecting to checkout...")} style={{background:"#EA580C"}}>🔒 Continue to checkout</Btn>
-        </div>
-      )}
+      <div style={{display:"flex",justifyContent:"flex-end",gap:10,marginTop:28,paddingTop:20,borderTop:`1px solid ${T.border}`}}>
+        <Btn variant="outline" onClick={()=>setQuoteModal(true)}>Request a quote</Btn>
+        <Btn variant="accent" onClick={()=>showToast("Redirecting to checkout...")} style={{background:"#EA580C"}}>🔒 Continue to checkout</Btn>
+      </div>
       {quoteModal&&<QuoteSuccessModal onClose={()=>setQuoteModal(false)}/>}
       {customQuoteModal&&<CustomQuoteModal onClose={()=>setCustomQuoteModal(false)}/>}
       {vatModal&&<VATContactModal onClose={()=>setVatModal(false)}/>}
@@ -2387,6 +2362,7 @@ function LicenceShop({showToast}){
 function PageSubscription({settings,setSettings,learners,setPage,showToast}){
   const [tab,setTab]=useState("courses");
   const [showDiscount,setShowDiscount]=useState(false);
+  const [hovTab,setHovTab]=useState(null);
   return(
     <div style={{background:T.bg,minHeight:"100vh"}}>
       <div style={{background:T.white,borderBottom:`1px solid ${T.border}`,padding:"44px 28px 0",textAlign:"center"}}>
@@ -2396,10 +2372,27 @@ function PageSubscription({settings,setSettings,learners,setPage,showToast}){
         <button onClick={()=>setShowDiscount(true)} style={{display:"inline-flex",alignItems:"center",gap:6,border:`1.5px solid ${T.border}`,borderRadius:20,padding:"7px 18px",background:T.white,cursor:"pointer",fontSize:13,fontWeight:600,color:T.text2,marginBottom:28,fontFamily:T.font}} onMouseEnter={e=>e.currentTarget.style.borderColor=T.accent2} onMouseLeave={e=>e.currentTarget.style.borderColor=T.border}>
           🏷️ See our discounts
         </button>
-        <div style={{display:"flex",justifyContent:"center",gap:0,marginBottom:-1}}>
-          {[["courses","Single Course Licence"],["licences","All Courses Licence"]].map(([v,l])=>(
-            <button key={v} onClick={()=>setTab(v)} style={{padding:"12px 32px",fontSize:14,fontWeight:tab===v?700:400,color:tab===v?T.accent:T.text3,background:"none",border:"none",borderBottom:`2px solid ${tab===v?T.accent:"transparent"}`,cursor:"pointer",fontFamily:T.font,transition:"all .15s"}}>{l}</button>
-          ))}
+        <div style={{display:"flex",justifyContent:"center",paddingBottom:32}}>
+          <div style={{display:"inline-flex",background:"#ECEAE8",borderRadius:10,padding:3,gap:0}}>
+            {[["courses","Single Course"],["licences","All Courses"]].map(([v,l])=>{
+              const active=tab===v;
+              const otherHovered=hovTab!==null&&hovTab!==v;
+              const thisHovered=hovTab===v;
+              const color=active?(otherHovered?"#888888":"#1A1A1A"):thisHovered?"#1A1A1A":"#888888";
+              const activePillOpacity=active?(otherHovered?0:1):0;
+              const ghostOpacity=!active&&thisHovered?1:0;
+              return(
+                <button key={v} onClick={()=>setTab(v)} onMouseEnter={()=>setHovTab(active?null:v)} onMouseLeave={()=>setHovTab(null)}
+                  style={{position:"relative",zIndex:1,padding:"9px 28px",fontSize:14,fontWeight:500,color,background:"none",border:"none",borderRadius:8,cursor:"pointer",fontFamily:T.font,transition:"color .25s ease",whiteSpace:"nowrap",letterSpacing:"-.01em"}}>
+                  {l}
+                  {/* active white pill — dims but stays visible when other hovered */}
+                  <span style={{position:"absolute",inset:0,background:"#FFFFFF",borderRadius:8,boxShadow:"0 1px 4px rgba(0,0,0,.12),0 0 0 0.5px rgba(0,0,0,.06)",zIndex:-1,opacity:activePillOpacity,transition:"opacity .25s ease"}}/>
+                  {/* hover ghost — near-white so hover→active is seamless */}
+                  <span style={{position:"absolute",inset:0,background:"rgba(255,255,255,.65)",borderRadius:8,zIndex:-1,opacity:ghostOpacity,transition:"opacity .2s ease"}}/>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
       {tab==="courses"?<CourseShop showToast={showToast}/>:<LicenceShop showToast={showToast}/>}
