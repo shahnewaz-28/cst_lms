@@ -1,0 +1,16 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="g1" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="100%" stop-color="#FF4F4F"/></radialGradient>
+    <radialGradient id="g2" cx="60%" cy="40%" r="70%"><stop offset="0%" stop-color="#4ECDC4"/><stop offset="100%" stop-color="#2980B9"/></radialGradient>
+    <radialGradient id="g3" cx="50%" cy="70%" r="70%"><stop offset="0%" stop-color="#FFA726"/><stop offset="100%" stop-color="#FF7043"/></radialGradient>
+    <radialGradient id="g4" cx="30%" cy="60%" r="70%"><stop offset="0%" stop-color="#5B8DEF"/><stop offset="100%" stop-color="#3A5FD9"/></radialGradient>
+  </defs>
+  <path d="M32 32 C20 28, 10 18, 14 8 C18 -2, 30 4, 32 16 Z" fill="url(#g4)"/>
+  <circle cx="18" cy="7" r="5" fill="url(#g4)"/>
+  <path d="M32 32 C36 20, 46 10, 56 14 C66 18, 60 30, 48 32 Z" fill="url(#g1)"/>
+  <circle cx="57" cy="18" r="5" fill="url(#g1)"/>
+  <path d="M32 32 C44 36, 54 46, 50 56 C46 66, 34 60, 32 48 Z" fill="url(#g3)"/>
+  <circle cx="46" cy="57" r="5" fill="url(#g3)"/>
+  <path d="M32 32 C28 44, 18 54, 8 50 C-2 46, 4 34, 16 32 Z" fill="url(#g2)"/>
+  <circle cx="7" cy="46" r="5" fill="url(#g2)"/>
+</svg>
