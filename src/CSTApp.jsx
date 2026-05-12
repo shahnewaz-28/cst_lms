@@ -673,65 +673,366 @@ function PageDashboard({ learners, courses, certs, settings, setPage, setReportC
 }
 
 // ─── LEARNERS PAGE ────────────────────────────────────────────────────────────
-function PageLearners({ learners, setLearners, settings, showToast, openInvite }) {
-  const [tab, setTab]=useState("all");
-  const [q, setQ]=useState("");
-  const [deptFilter, setDeptFilter]=useState("All");
-  const filtered=learners.filter(l=>{
-    const matchQ=l.name.toLowerCase().includes(q.toLowerCase())||l.email.toLowerCase().includes(q.toLowerCase());
-    const matchD=deptFilter==="All"||l.dept===deptFilter;
-    const matchT=tab==="all"||tab===l.status.toLowerCase();
-    return matchQ&&matchD&&matchT;
-  });
+const ACCESS_TYPES=["Learner","Training Reporter","Training Coordinator","Training Administrator","Training Service Owner"];
 
-  return (
-    <div style={{padding:"24px 28px"}}>
-      <div style={{display:"flex",gap:12,marginBottom:20,alignItems:"center"}}>
-        <div style={{display:"flex",alignItems:"center",gap:8,background:T.bg,border:`1px solid ${T.border}`,borderRadius:8,padding:"8px 14px",flex:1,maxWidth:320}}>
-          <Icon d={ICONS.search} size={14} color={T.text3}/>
-          <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search by name, email, dept…" style={{border:"none",background:"transparent",outline:"none",fontSize:13,color:T.text,fontFamily:T.font,flex:1}}/>
+function LearnerProfileModal({user,courses,onSave,onClose,showToast}){
+  const [email,setEmail]=useState(user.email);
+  const [name,setName]=useState(user.name);
+  const [dept,setDept]=useState(user.dept||"");
+  const [location,setLocation]=useState(user.location||"");
+  const [access,setAccess]=useState(user.access||"Learner");
+  const [enrolments,setEnrolments]=useState(user.enrolments||{});
+
+  const toggleCourse=(cname)=>{
+    setEnrolments(prev=>{
+      const next={...prev};
+      if(next[cname]!==undefined){delete next[cname];}
+      else{next[cname]=user.enrolments?.[cname]??0;}
+      return next;
+    });
+  };
+
+  const handleSave=()=>{
+    if(!email.trim()||!name.trim()){showToast("Email and name required.","error");return;}
+    onSave({...user,email:email.trim(),name:name.trim(),dept:dept.trim(),location:location.trim(),access,enrolments,events:[...(user.events||[]),"Profile updated"]});
+    showToast("✅ Profile saved.");
+    onClose();
+  };
+
+  const handleArchive=()=>{
+    const nextStatus=user.status==="Deactivated"?"Active":"Deactivated";
+    const label=nextStatus==="Deactivated"?"Archived":"Unarchived";
+    onSave({...user,status:nextStatus,events:[...(user.events||[]),label]});
+    showToast(`${label}.`);
+    onClose();
+  };
+
+  return(
+    <Modal open onClose={onClose} title={`Profile — ${user.name}`}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
+        <Input label="Full name" value={name} onChange={e=>setName(e.target.value)}/>
+        <Input label="Email address" type="email" value={email} onChange={e=>setEmail(e.target.value)}/>
+        <Input label="Department" value={dept} onChange={e=>setDept(e.target.value)}/>
+        <Input label="Location" value={location} onChange={e=>setLocation(e.target.value)}/>
+        <div style={{gridColumn:"1/-1"}}>
+          <div style={{fontSize:12,fontWeight:600,color:T.text2,marginBottom:5}}>Access type</div>
+          <select value={access} onChange={e=>setAccess(e.target.value)} style={{width:"100%",padding:"8px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,color:T.text}}>
+            {ACCESS_TYPES.map(a=><option key={a}>{a}</option>)}
+          </select>
         </div>
-        <select value={deptFilter} onChange={e=>setDeptFilter(e.target.value)} style={{padding:"8px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,background:T.white,color:T.text}}>
-          <option>All</option>
-          {settings.departments.map(d=><option key={d}>{d}</option>)}
-        </select>
-        <Btn variant="primary" sm onClick={openInvite}>+ Invite Learners</Btn>
       </div>
 
-      <div style={{display:"flex",gap:2,background:T.bg,borderRadius:10,padding:4,width:"fit-content",marginBottom:20}}>
-        {[["all","All"],["active","Active"],["pending","Pending"],["deactivated","Deactivated"]].map(([v,l])=>(
-          <button key={v} onClick={()=>setTab(v)} style={{padding:"7px 18px",borderRadius:8,fontSize:12.5,fontWeight:500,cursor:"pointer",border:"none",background:tab===v?T.white:"transparent",color:tab===v?T.text:T.text3,boxShadow:tab===v?"0 1px 4px rgba(0,0,0,.1)":"none",fontFamily:T.font}}>{l} ({learners.filter(l2=>v==="all"||l2.status.toLowerCase()===v).length})</button>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:12,fontWeight:600,color:T.text2,marginBottom:8}}>Course enrolments</div>
+        <div style={{display:"flex",flexDirection:"column",gap:6}}>
+          {courses.map(c=>{
+            const enrolled=enrolments[c.name]!==undefined;
+            const pct=enrolled?enrolments[c.name]:0;
+            return(
+              <label key={c.id} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 12px",border:`1px solid ${enrolled?T.accent:T.border}`,borderRadius:8,cursor:"pointer",background:enrolled?T.accentLight:"transparent",transition:"all .15s"}}>
+                <input type="checkbox" checked={enrolled} onChange={()=>toggleCourse(c.name)} style={{accentColor:T.accent}}/>
+                <span style={{flex:1,fontSize:13,color:T.text}}>{c.emoji} {c.name}</span>
+                {enrolled&&<span style={{fontSize:11,color:T.accent,fontWeight:600}}>{pct}% complete</span>}
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      {user.events?.length>0&&(
+        <div style={{marginBottom:16}}>
+          <div style={{fontSize:12,fontWeight:600,color:T.text2,marginBottom:6}}>Activity</div>
+          <div style={{display:"flex",flexDirection:"column",gap:4,maxHeight:100,overflowY:"auto"}}>
+            {user.events.map((ev,i)=><div key={i} style={{fontSize:11.5,color:T.text3,padding:"4px 0",borderBottom:`1px solid ${T.border}`}}>{ev}</div>)}
+          </div>
+        </div>
+      )}
+
+      <div style={{display:"flex",justifyContent:"space-between",paddingTop:16,borderTop:`1px solid ${T.border}`}}>
+        <Btn variant="outline" onClick={handleArchive} style={{color:T.red,borderColor:T.red}}>
+          {user.status==="Deactivated"?"Unarchive":"Archive user"}
+        </Btn>
+        <div style={{display:"flex",gap:8}}>
+          <Btn variant="outline" onClick={onClose}>Cancel</Btn>
+          <Btn variant="primary" onClick={handleSave}>Save changes</Btn>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function AddUsersModal({onClose,learners,setLearners,showToast}){
+  const [mode,setMode]=useState("text");
+  const [textVal,setTextVal]=useState("ali.khan@example.com, Ali Khan, Care Workers, London\nmaria.woods@example.com, Maria Woods, Admin Staff, Bristol");
+  const [csvText,setCsvText]=useState("");
+  const [mapping,setMapping]=useState(["email","name","dept","location"]);
+  const [parsedRows,setParsedRows]=useState([]);
+  const [showMapping,setShowMapping]=useState(false);
+  const [sendWelcome,setSendWelcome]=useState(true);
+
+  const parseRows=(src)=>src.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>l.split(",").map(c=>c.trim().replace(/^"|"$/g,"")));
+
+  const handleStart=()=>{
+    const src=mode==="text"?textVal:csvText;
+    const rows=parseRows(src);
+    if(!rows.length){showToast("Add at least one row.","error");return;}
+    if(!showMapping){setParsedRows(rows);setShowMapping(true);showToast("Check column mapping, then start upload again.");return;}
+
+    const FIELDS=["email","name","dept","location","skip"];
+    let added=0,updated=0;
+    const cols=[...document.querySelectorAll("[data-map-sel]")].map(s=>s.value);
+    const finalMapping=cols.length?cols:mapping;
+
+    setLearners(prev=>{
+      const next=[...prev];
+      for(const row of parsedRows){
+        const rec={};
+        finalMapping.forEach((f,i)=>{if(f!=="skip")rec[f]=row[i]||"";});
+        if(!rec.email)continue;
+        const existing=next.find(u=>u.email.toLowerCase()===rec.email.toLowerCase());
+        const colors=["#2A6FDB","#16A34A","#DC2626","#7C3AED","#0891B2","#BE185D","#059669"];
+        if(existing){
+          Object.assign(existing,{name:rec.name||existing.name,dept:rec.dept||existing.dept,location:rec.location||existing.location,events:[...(existing.events||[]),"Updated by import"]});
+          updated++;
+        } else {
+          const nm=rec.name||rec.email;
+          const parts=nm.split(" ");
+          const init=(parts[0][0]+(parts[1]?.[0]||"")).toUpperCase();
+          next.push({id:"L"+Date.now()+Math.random(),name:nm,email:rec.email,dept:rec.dept||"Unassigned",location:rec.location||"",initials:init,color:colors[next.length%colors.length],status:"Active",joined:new Date().toISOString().split("T")[0],progress:0,access:"Learner",enrolments:{},events:[sendWelcome?"Welcome email queued":"Imported"]});
+          added++;
+        }
+      }
+      return next;
+    });
+    showToast(`${added} added, ${updated} updated${sendWelcome?", welcome emails queued":""}.`);
+    onClose();
+  };
+
+  const exportCSV=()=>{
+    const headers=["name","email","dept","location","status","access","progress"];
+    const rows=learners.map(l=>[l.name,l.email,l.dept||"",l.location||"",l.status,l.access||"Learner",l.progress||0]);
+    const csv=[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+    a.download="learners.csv";a.click();URL.revokeObjectURL(a.href);
+    showToast("CSV exported.");
+  };
+
+  const sampleRow=parsedRows[0]||[];
+  const FIELD_OPTS=["email","name","dept","location","skip"];
+
+  return(
+    <Modal open onClose={onClose} title="Add / Update Users">
+      <div style={{display:"flex",gap:2,background:T.bg,borderRadius:10,padding:4,width:"fit-content",marginBottom:16}}>
+        {[["text","Text entry"],["csv","Spreadsheet"]].map(([v,l])=>(
+          <button key={v} onClick={()=>{setMode(v);setShowMapping(false);}} style={{padding:"6px 16px",borderRadius:8,fontSize:12.5,fontWeight:500,cursor:"pointer",border:"none",background:mode===v?T.white:"transparent",color:mode===v?T.text:T.text3,fontFamily:T.font}}>{l}</button>
         ))}
       </div>
 
-      <div className="cst-table-scroll" style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,overflow:"hidden"}}>
-        <table style={{width:"100%",borderCollapse:"collapse"}}>
-          <thead><tr>{["Learner","Email","Department","Status","Joined","Progress","Actions"].map(h=><th key={h} style={{textAlign:"left",padding:"10px 16px",fontSize:11.5,color:T.text3,fontWeight:600,borderBottom:`1px solid ${T.border}`,background:T.bg}}>{h}</th>)}</tr></thead>
-          <tbody>
-            {filtered.map(l=>(
-              <tr key={l.id} onMouseEnter={e=>e.currentTarget.style.background=T.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                <td style={{padding:"12px 16px"}}><div style={{display:"flex",alignItems:"center",gap:10}}><Av initials={l.initials} color={l.color}/><span style={{fontSize:13,fontWeight:500}}>{l.name}</span></div></td>
-                <td style={{padding:"12px 16px",fontSize:12.5,color:T.text2}}>{l.email}</td>
-                <td style={{padding:"12px 16px",fontSize:12.5,color:T.text2}}>{l.dept}</td>
-                <td style={{padding:"12px 16px"}}>{statusPill(l.status)}</td>
-                <td style={{padding:"12px 16px",fontSize:12,color:T.text3}}>{new Date(l.joined).toLocaleDateString("en-GB")}</td>
-                <td style={{padding:"12px 16px",minWidth:140}}><ProgCell pct={l.progress}/></td>
-                <td style={{padding:"12px 16px"}}>
-                  <div style={{display:"flex",gap:6}}>
-                    <Btn variant="outline" sm onClick={()=>showToast(`✉️ Reminder sent to ${l.name.split(" ")[0]}!`)}>Remind</Btn>
-                    {l.status==="Deactivated"
-                      ? <Btn variant="accent" sm onClick={()=>{setLearners(prev=>prev.map(x=>x.id===l.id?{...x,status:"Active"}:x));showToast("✅ Learner reactivated!");}}>Reactivate</Btn>
-                      : <Btn variant="outline" sm onClick={()=>{setLearners(prev=>prev.map(x=>x.id===l.id?{...x,status:"Deactivated"}:x));showToast("⬛ Learner deactivated.");}}>Deactivate</Btn>
-                    }
-                  </div>
-                </td>
-              </tr>
+      {mode==="text"&&(
+        <div style={{marginBottom:12}}>
+          <div style={{fontSize:12,fontWeight:600,color:T.text2,marginBottom:5}}>One user per row</div>
+          <textarea value={textVal} onChange={e=>{setTextVal(e.target.value);setShowMapping(false);}} rows={6} style={{width:"100%",boxSizing:"border-box",padding:"9px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:12.5,fontFamily:"monospace",resize:"vertical"}}/>
+          <div style={{fontSize:11.5,color:T.text3,marginTop:4}}>Format: email, name, department, location</div>
+        </div>
+      )}
+
+      {mode==="csv"&&(
+        <div style={{marginBottom:12}}>
+          <textarea value={csvText} onChange={e=>{setCsvText(e.target.value);setShowMapping(false);}} rows={6} placeholder="Paste CSV content here…" style={{width:"100%",boxSizing:"border-box",padding:"9px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:12.5,fontFamily:"monospace",resize:"vertical"}}/>
+        </div>
+      )}
+
+      {showMapping&&sampleRow.length>0&&(
+        <div style={{marginBottom:16,padding:"12px",background:T.bg,borderRadius:8,border:`1px solid ${T.border}`}}>
+          <div style={{fontSize:12,fontWeight:700,color:T.text2,marginBottom:8}}>Map columns</div>
+          <div style={{display:"flex",flexDirection:"column",gap:6}}>
+            {sampleRow.map((cell,i)=>(
+              <div key={i} style={{display:"flex",alignItems:"center",gap:10}}>
+                <div style={{fontSize:12,color:T.text,background:T.white,border:`1px solid ${T.border}`,borderRadius:6,padding:"4px 10px",minWidth:140,fontFamily:"monospace"}}>{cell||`Column ${i+1}`}</div>
+                <select data-map-sel defaultValue={mapping[i]||"skip"} style={{padding:"4px 8px",border:`1px solid ${T.border}`,borderRadius:6,fontSize:12,fontFamily:T.font}}>
+                  {FIELD_OPTS.map(f=><option key={f} value={f}>{f}</option>)}
+                </select>
+              </div>
             ))}
-            {filtered.length===0&&<tr><td colSpan={7} style={{textAlign:"center",padding:"30px",color:T.text3,fontSize:13}}>No learners found</td></tr>}
-          </tbody>
-        </table>
-        <div style={{padding:"12px 16px",fontSize:12,color:T.text3,borderTop:`1px solid ${T.border}`}}>Showing {filtered.length} of {learners.length} learners</div>
+          </div>
+        </div>
+      )}
+
+      <label style={{display:"flex",alignItems:"center",gap:8,marginBottom:16,cursor:"pointer",fontSize:13,color:T.text2}}>
+        <input type="checkbox" checked={sendWelcome} onChange={e=>setSendWelcome(e.target.checked)} style={{accentColor:T.accent}}/>
+        Send users a training suite welcome email
+      </label>
+
+      <div style={{display:"flex",justifyContent:"space-between",paddingTop:16,borderTop:`1px solid ${T.border}`}}>
+        <Btn variant="ghost" onClick={exportCSV}>Export CSV</Btn>
+        <div style={{display:"flex",gap:8}}>
+          <Btn variant="outline" onClick={onClose}>Cancel</Btn>
+          <Btn variant="primary" onClick={handleStart}>Start upload</Btn>
+        </div>
       </div>
+    </Modal>
+  );
+}
+
+function PageLearners({ learners, setLearners, courses, settings, showToast, openInvite, setPage }) {
+  const [tab,setTab]=useState("active");
+  const [hovTab,setHovTab]=useState(null);
+  const [q,setQ]=useState("");
+  const [courseFilter,setCourseFilter]=useState("all");
+  const [profileUser,setProfileUser]=useState(null);
+  const [showImport,setShowImport]=useState(false);
+
+  const activeCount=learners.filter(l=>l.status==="Active").length;
+  const pendingCount=learners.filter(l=>l.status==="Pending").length;
+  const archivedCount=learners.filter(l=>l.status==="Deactivated").length;
+  const completionRate=activeCount?Math.round(learners.filter(l=>l.status==="Active").reduce((s,l)=>s+(l.progress||0),0)/activeCount):0;
+
+  const statusForTab=(t)=>t==="active"?"Active":t==="pending"?"Pending":"Deactivated";
+  const filtered=learners.filter(l=>{
+    const statusMatch=l.status===statusForTab(tab);
+    const qLow=q.toLowerCase();
+    const queryMatch=!q||[l.name,l.email,l.dept||"",l.location||""].some(v=>v.toLowerCase().includes(qLow));
+    const courseMatch=courseFilter==="all"||(l.enrolments&&l.enrolments[courseFilter]!==undefined);
+    return statusMatch&&queryMatch&&courseMatch;
+  });
+
+  const handleSaveProfile=(updated)=>{
+    setLearners(prev=>prev.map(l=>l.id===updated.id?updated:l));
+  };
+
+  const handleApprove=(id)=>{
+    setLearners(prev=>prev.map(l=>l.id===id?{...l,status:"Active",events:[...(l.events||[]),"Approved by administrator"]}:l));
+    showToast("✅ Learner approved.");
+  };
+
+  const handleExportCSV=()=>{
+    const rows=[["Name","Email","Department","Location","Access","Status","Progress","Last Login"]];
+    learners.forEach(l=>rows.push([l.name,l.email,l.dept||"",l.location||"",l.access||"Learner",l.status,`${l.progress||0}%`,l.lastLogin||"Never"]));
+    const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const a=document.createElement("a");a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);a.download="learners.csv";a.click();
+    showToast("CSV exported.");
+  };
+
+  const TABS=[["active","Active",activeCount],["pending","Pending",pendingCount],["archived","Archived",archivedCount]];
+
+  return(
+    <div style={{padding:"28px 32px"}}>
+
+      {/* Page header */}
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:28,gap:16}}>
+        <div>
+          <p style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".09em",color:T.text3,marginBottom:0}}>User management</p>
+        </div>
+        <div style={{display:"flex",gap:8,flexShrink:0,paddingTop:4}}>
+          <Btn variant="outline" sm onClick={handleExportCSV}>Export CSV</Btn>
+          <Btn variant="primary" sm onClick={()=>setShowImport(true)}>Add / update users</Btn>
+        </div>
+      </div>
+
+      {/* Metric cards */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,marginBottom:28}}>
+        {[["Active users",activeCount,T.accent],["Pending approval",pendingCount,T.amberMid],["Archived",archivedCount,T.text3],["Completion rate",`${completionRate}%`,T.greenMid]].map(([label,val,color])=>(
+          <div key={label} style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:"18px 20px"}}>
+            <div style={{fontSize:12,color:T.text3,marginBottom:8}}>{label}</div>
+            <div style={{fontSize:28,fontWeight:700,color,lineHeight:1}}>{val}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Workspace */}
+      <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,overflow:"hidden"}}>
+
+        {/* Toolbar */}
+        <div style={{padding:"16px 20px",borderBottom:`1px solid ${T.border}`,display:"flex",flexWrap:"wrap",gap:"12px 20px",alignItems:"flex-end"}}>
+          {/* Status tabs */}
+          <div style={{display:"flex",gap:2,background:T.bg,borderRadius:10,padding:3}}>
+            {TABS.map(([v,l,count])=>{
+              const isActive=tab===v;
+              const isHov=hovTab===v;
+              const otherHov=hovTab&&hovTab!==v;
+              const color=isActive?(otherHov?T.text3:T.text):isHov?T.text:T.text3;
+              const bg=isActive&&!otherHov?T.white:"transparent";
+              return(
+                <button key={v} onClick={()=>setTab(v)} onMouseEnter={()=>setHovTab(isActive?null:v)} onMouseLeave={()=>setHovTab(null)}
+                  style={{padding:"7px 18px",borderRadius:8,fontSize:12.5,fontWeight:500,cursor:"pointer",border:"none",background:bg,color,boxShadow:isActive&&!otherHov?"0 1px 4px rgba(0,0,0,.1)":"none",fontFamily:T.font,transition:"color .2s ease, background .2s ease",whiteSpace:"nowrap"}}>
+                  {l} <span style={{opacity:.7}}>({count})</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Labeled search — flex-grow, right side */}
+          <label style={{display:"flex",flexDirection:"column",gap:4,flex:1,minWidth:220,maxWidth:380}}>
+            <span style={{fontSize:11,fontWeight:600,color:T.text3,lineHeight:1}}>Search</span>
+            <div style={{display:"flex",alignItems:"center",gap:8,background:T.bg,border:`1px solid ${T.border}`,borderRadius:8,padding:"7px 12px"}}>
+              <Icon d={ICONS.search} size={14} color={T.text3}/>
+              <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Name, email, department, location" style={{border:"none",background:"transparent",outline:"none",fontSize:13,color:T.text,fontFamily:T.font,flex:1,minWidth:0}}/>
+            </div>
+          </label>
+
+          {/* Course filter — own row (flex-basis 100%) */}
+          <select value={courseFilter} onChange={e=>setCourseFilter(e.target.value)}
+            style={{flexBasis:"100%",padding:"8px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,background:T.white,color:T.text,cursor:"pointer"}}>
+            <option value="all">All courses</option>
+            {courses.map(c=><option key={c.id} value={c.name}>{c.name}</option>)}
+          </select>
+        </div>
+
+        {/* Table */}
+        <div className="cst-table-scroll">
+          <table style={{width:"100%",borderCollapse:"collapse",minWidth:700}}>
+            <thead>
+              <tr>{["Name","Profile","Segment","Courses","Progress","Last login","Actions"].map(h=>(
+                <th key={h} style={{textAlign:"left",padding:"11px 18px",fontSize:11.5,color:T.text3,fontWeight:600,borderBottom:`1px solid ${T.border}`,background:T.bg,whiteSpace:"nowrap"}}>{h}</th>
+              ))}</tr>
+            </thead>
+            <tbody>
+              {filtered.map(l=>{
+                const courseCount=Object.keys(l.enrolments||{}).length;
+                return(
+                  <tr key={l.id} onMouseEnter={e=>e.currentTarget.style.background=T.bg} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                    <td style={{padding:"13px 18px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:11}}>
+                        <Av initials={l.initials} color={l.color}/>
+                        <div>
+                          <div style={{fontSize:13,fontWeight:600,color:T.text}}>{l.name}</div>
+                          <div style={{fontSize:11.5,color:T.text3,marginTop:1}}>{l.email}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style={{padding:"13px 18px"}}>
+                      <span style={{fontSize:11.5,fontWeight:600,padding:"3px 9px",borderRadius:20,background:l.access&&l.access!=="Learner"?T.accentLight:T.bg,color:l.access&&l.access!=="Learner"?T.accent:T.text3}}>{l.access||"Learner"}</span>
+                    </td>
+                    <td style={{padding:"13px 18px",fontSize:12.5,color:T.text2}}>
+                      {l.dept||"—"}
+                      {l.location&&<div style={{fontSize:11.5,color:T.text3,marginTop:1}}>{l.location}</div>}
+                    </td>
+                    <td style={{padding:"13px 18px",fontSize:13,color:T.text2}}>{courseCount>0?`${courseCount} enrolled`:"—"}</td>
+                    <td style={{padding:"13px 18px",minWidth:130}}><ProgCell pct={l.progress||0}/></td>
+                    <td style={{padding:"13px 18px",fontSize:12,color:T.text3,whiteSpace:"nowrap"}}>{l.lastLogin||"Never"}</td>
+                    <td style={{padding:"13px 18px"}}>
+                      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                        {l.status==="Pending"&&<Btn variant="accent" sm onClick={()=>handleApprove(l.id)}>Approve</Btn>}
+                        <Btn variant="outline" sm onClick={()=>setProfileUser(l)}>Profile</Btn>
+                        {l.status==="Deactivated"
+                          ?<Btn variant="outline" sm onClick={()=>{setLearners(prev=>prev.map(x=>x.id===l.id?{...x,status:"Active",events:[...(x.events||[]),"Unarchived"]}:x));showToast("✅ Learner restored.");}}>Unarchive</Btn>
+                          :<Btn variant="outline" sm onClick={()=>{setLearners(prev=>prev.map(x=>x.id===l.id?{...x,status:"Deactivated",events:[...(x.events||[]),"Archived"]}:x));showToast("Learner archived.");}}>Archive</Btn>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+              {filtered.length===0&&<tr><td colSpan={7} style={{textAlign:"center",padding:"36px",color:T.text3,fontSize:13}}>No learners match this view</td></tr>}
+            </tbody>
+          </table>
+        </div>
+        <div style={{padding:"11px 18px",fontSize:12,color:T.text3,borderTop:`1px solid ${T.border}`}}>Showing {filtered.length} of {learners.length} learners</div>
+      </div>
+
+      {profileUser&&<LearnerProfileModal user={profileUser} courses={courses} onSave={handleSaveProfile} onClose={()=>setProfileUser(null)} showToast={showToast}/>}
+      {showImport&&<AddUsersModal onClose={()=>setShowImport(false)} learners={learners} setLearners={setLearners} showToast={showToast}/>}
     </div>
   );
 }
@@ -2929,7 +3230,7 @@ export default function CSTApp() {
         <Topbar page={page} openInvite={()=>setShowInvite(true)} openAssign={()=>setShowAssign(true)} onMenuClick={()=>setSidebarOpen(o=>!o)}/>
 
         {page==="dashboard"&&<PageDashboard {...commonProps} openInvite={()=>setShowInvite(true)} openAssign={()=>setShowAssign(true)} setReportCourse={setReportCourse}/>}
-        {page==="learners"&&<PageLearners {...commonProps} setLearners={setLearners} openInvite={()=>setShowInvite(true)}/>}
+        {page==="learners"&&<PageLearners {...commonProps} courses={courses} setLearners={setLearners} openInvite={()=>setShowInvite(true)}/>}
         {page==="invite"&&<div style={{padding:"24px 28px",maxWidth:600}}><div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:24}}><div style={{fontSize:15,fontWeight:700,marginBottom:4}}>Invite Learners</div><div style={{fontSize:13,color:T.text3,marginBottom:20}}>Click the button below to open the invite dialog.</div><Btn variant="primary" onClick={()=>setShowInvite(true)}>Open Invite Dialog</Btn></div></div>}
         {page==="courses"&&<PageCourses {...commonProps} openAssign={()=>setShowAssign(true)} setReportCourse={setReportCourse}/>}
         {page==="assigned"&&<PageAssigned {...commonProps} openAssign={()=>setShowAssign(true)}/>}
