@@ -2709,9 +2709,97 @@ function OnboardingWizard({ onComplete }) {
   );
 }
 
+// ─── LOGIN SCREEN ─────────────────────────────────────────────────────────────
+function LoginScreen({ onAuth }) {
+  const [email, setEmail]=useState("");
+  const [password, setPassword]=useState("");
+  const [showPw, setShowPw]=useState(false);
+  const [error, setError]=useState("");
+  const [loading, setLoading]=useState(false);
+
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    setError("");
+    if(!email.trim()||!password.trim()){setError("Please enter your email and password.");return;}
+    const DEMO_EMAIL="admin@careskillstraining.org";
+    const DEMO_PASS="Care2026!";
+    if(email.trim()!==DEMO_EMAIL||password!==DEMO_PASS){setError("Incorrect email or password.");return;}
+    setLoading(true);
+    setTimeout(()=>{ setLoading(false); onAuth(email.trim()); },600);
+  };
+
+  return(
+    <div style={{minHeight:"100vh",background:"#F1F4F9",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:T.font,padding:24}}>
+      {/* Card */}
+      <div style={{background:"#fff",borderRadius:16,padding:"40px 40px 36px",width:"100%",maxWidth:400,boxShadow:"0 4px 24px rgba(11,30,61,.10)",border:"1px solid #E2E8F2"}}>
+        {/* Logo + brand */}
+        <div style={{textAlign:"center",marginBottom:28}}>
+          <img src="/logo-full.png" alt="Care Skills Training" style={{height:60,marginBottom:12,objectFit:"contain"}}/>
+          <div style={{fontSize:11,fontWeight:600,color:T.text3,letterSpacing:".1em",textTransform:"uppercase"}}>Learning Management Suite</div>
+        </div>
+
+        <form onSubmit={handleSubmit} autoComplete="off">
+          {/* Username */}
+          <div style={{marginBottom:16}}>
+            <label style={{display:"block",fontSize:12.5,fontWeight:600,color:T.text2,marginBottom:6}}>Email address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={e=>{setEmail(e.target.value);setError("");}}
+              placeholder="you@organisation.co.uk"
+              autoFocus
+              style={{width:"100%",boxSizing:"border-box",border:`1.5px solid ${error?"#DC2626":T.border}`,borderRadius:8,padding:"10px 14px",fontSize:14,fontFamily:T.font,color:T.text,outline:"none",transition:"border .15s"}}
+              onFocus={e=>e.target.style.borderColor=T.accent}
+              onBlur={e=>e.target.style.borderColor=error?"#DC2626":T.border}
+            />
+          </div>
+
+          {/* Password */}
+          <div style={{marginBottom:20}}>
+            <label style={{display:"block",fontSize:12.5,fontWeight:600,color:T.text2,marginBottom:6}}>Password</label>
+            <div style={{position:"relative"}}>
+              <input
+                type={showPw?"text":"password"}
+                value={password}
+                onChange={e=>{setPassword(e.target.value);setError("");}}
+                placeholder="Enter your password"
+                style={{width:"100%",boxSizing:"border-box",border:`1.5px solid ${error?"#DC2626":T.border}`,borderRadius:8,padding:"10px 40px 10px 14px",fontSize:14,fontFamily:T.font,color:T.text,outline:"none",transition:"border .15s"}}
+                onFocus={e=>e.target.style.borderColor=T.accent}
+                onBlur={e=>e.target.style.borderColor=error?"#DC2626":T.border}
+              />
+              <button type="button" onClick={()=>setShowPw(p=>!p)}
+                style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",color:T.text3,display:"flex",alignItems:"center",padding:4}}>
+                {showPw
+                  ? <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z" stroke="currentColor" strokeWidth="1.6"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.6"/><path d="M3 3l14 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
+                  : <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z" stroke="currentColor" strokeWidth="1.6"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.6"/></svg>
+                }
+              </button>
+            </div>
+          </div>
+
+          {/* Error */}
+          {error&&<div style={{background:"#FEE2E2",border:"1px solid #FECACA",borderRadius:8,padding:"9px 13px",fontSize:12.5,color:"#991B1B",marginBottom:16}}>{error}</div>}
+
+          {/* Submit */}
+          <button type="submit" disabled={loading}
+            style={{width:"100%",background:loading?"#94A3B8":T.navy,color:"#fff",border:"none",borderRadius:8,padding:"11px",fontSize:14,fontWeight:600,fontFamily:T.font,cursor:loading?"not-allowed":"pointer",transition:"background .15s",letterSpacing:"-.1px"}}>
+            {loading?"Signing in…":"Sign In"}
+          </button>
+        </form>
+
+        <div style={{textAlign:"center",marginTop:20}}>
+          <a href="mailto:support@careskillstraining.org" style={{fontSize:12.5,color:T.accent,textDecoration:"none"}}>Having trouble signing in?</a>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 // BUILD: v3 — storage keys reset, dropdown wizard step
 export default function CSTApp() {
+  const [authed, setAuthed]=useState(()=>!!sessionStorage.getItem("cst:authed"));
   const [ready, setReady]=useState(false);
   const [sidebarOpen, setSidebarOpen]=useState(false);
   const [onboarded, setOnboarded]=useState(true); // assume done until storage says otherwise
@@ -2777,6 +2865,13 @@ export default function CSTApp() {
     setOnboarded(true);
     showToast(`🎉 Welcome, ${answers.managerName}! Dashboard is ready.`);
   };
+
+  const handleAuth=(username)=>{
+    sessionStorage.setItem("cst:authed","1");
+    setAuthed(true);
+  };
+
+  if(!authed) return <LoginScreen onAuth={handleAuth}/>;
 
   if(!ready) return (
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",height:"100vh",fontFamily:T.font,background:T.bg}}>
