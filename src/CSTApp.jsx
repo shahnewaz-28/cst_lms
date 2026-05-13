@@ -217,7 +217,7 @@ const NAV = [
   {id:"assigned",  label:"Assigned",     icon:"chart"},
   {id:"certs",     label:"Certificates", icon:"award"},
   {id:"reports",   label:"Reports",      icon:"chart"},
-  {id:"subscription",label:"Subscription",icon:"credit"},
+  {id:"pricing",label:"Pricing",icon:"credit"},
   {id:"settings",  label:"Settings",     icon:"settings"},
 ];
 
@@ -267,7 +267,7 @@ function Sidebar({ page, setPage, learnerCount, settings, open, onClose }) {
 }
 
 // ─── TOPBAR ───────────────────────────────────────────────────────────────────
-const PAGE_TITLES = {dashboard:"Dashboard",learners:"Manage Learners",invite:"Invite Learners",courses:"Available Courses",assigned:"Assigned Courses",certs:"Certificates",reports:"Reports",subscription:"Subscription",settings:"Settings"};
+const PAGE_TITLES = {dashboard:"Dashboard",learners:"Manage Learners",invite:"Invite Learners",courses:"Available Courses",assigned:"Assigned Courses",certs:"Certificates",reports:"Reports",pricing:"Pricing",settings:"Settings"};
 
 function Topbar({ page, openInvite, openAssign, onMenuClick }) {
   return (
@@ -349,7 +349,7 @@ function OpsStrip({ learners, settings, setPage, openInvite }) {
         {exhausted && (
           <div style={{display:"flex",alignItems:"flex-start",gap:8,background:T.redBg,border:`1px solid #FECACA`,borderRadius:8,padding:"9px 12px",marginBottom:14,fontSize:12,color:T.red,lineHeight:1.5}}>
             <span style={{flexShrink:0}}>🚫</span>
-            <span>All licences are used up. To add more learners, <strong style={{cursor:"pointer",textDecoration:"underline"}} onClick={()=>setPage("subscription")}>buy more licences</strong>.</span>
+            <span>All licences are used up. To add more learners, <strong style={{cursor:"pointer",textDecoration:"underline"}} onClick={()=>setPage("pricing")}>buy more licences</strong>.</span>
           </div>
         )}
 
@@ -361,7 +361,7 @@ function OpsStrip({ learners, settings, setPage, openInvite }) {
 
       {/* Subscription card */}
       <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:"18px 20px"}}>
-        <div style={{fontSize:11,fontWeight:700,color:T.text3,textTransform:"uppercase",letterSpacing:".07em",marginBottom:12}}>Subscription</div>
+        <div style={{fontSize:11,fontWeight:700,color:T.text3,textTransform:"uppercase",letterSpacing:".07em",marginBottom:12}}>Pricing</div>
 
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
           <span style={{fontSize:13,fontWeight:700,color:T.text}}>⭐ {settings.plan}</span>
@@ -379,8 +379,8 @@ function OpsStrip({ learners, settings, setPage, openInvite }) {
         </div>
 
         <div style={{display:"flex",gap:8,paddingTop:14,borderTop:`1px solid ${T.border}`}}>
-          <Btn variant="outline" sm onClick={()=>setPage("subscription")} style={{flex:1,justifyContent:"center"}}>Manage plan</Btn>
-          <Btn variant="primary" sm onClick={()=>setPage("subscription")} style={{flex:1,justifyContent:"center"}}>Buy licences</Btn>
+          <Btn variant="outline" sm onClick={()=>setPage("pricing")} style={{flex:1,justifyContent:"center"}}>Manage plan</Btn>
+          <Btn variant="primary" sm onClick={()=>setPage("pricing")} style={{flex:1,justifyContent:"center"}}>Buy licences</Btn>
         </div>
       </div>
     </div>
@@ -613,7 +613,7 @@ function PageDashboard({ learners, courses, certs, settings, setPage, setReportC
 
         {/* Quick subscription summary */}
         <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:12,padding:20,display:"flex",flexDirection:"column",gap:12}}>
-          <div style={{fontSize:13.5,fontWeight:700,color:T.text}}>Subscription</div>
+          <div style={{fontSize:13.5,fontWeight:700,color:T.text}}>Pricing</div>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
             <span style={{fontSize:16}}>⭐</span>
             <span style={{fontSize:13,fontWeight:600,color:T.text}}>{settings.plan}</span>
@@ -629,8 +629,8 @@ function PageDashboard({ learners, courses, certs, settings, setPage, setReportC
             </div>
           </div>
           <div style={{display:"flex",gap:8,marginTop:"auto"}}>
-            <Btn variant="outline" sm onClick={()=>setPage("subscription")} style={{flex:1,justifyContent:"center"}}>Manage plan</Btn>
-            <Btn variant="primary" sm onClick={()=>setPage("subscription")} style={{flex:1,justifyContent:"center"}}>Buy licences</Btn>
+            <Btn variant="outline" sm onClick={()=>setPage("pricing")} style={{flex:1,justifyContent:"center"}}>Manage plan</Btn>
+            <Btn variant="primary" sm onClick={()=>setPage("pricing")} style={{flex:1,justifyContent:"center"}}>Buy licences</Btn>
           </div>
         </div>
       </div>
@@ -882,7 +882,7 @@ function AddUsersModal({onClose,learners,setLearners,showToast,settings,setPage}
 
         {/* Licence banner */}
         {settings&&<div style={{padding:"0 28px 12px"}}>
-          <LicenceBanner activeLearners={activeLearners} settings={settings} onUpgrade={()=>{onClose();setPage("subscription");}}/>
+          <LicenceBanner activeLearners={activeLearners} settings={settings} onUpgrade={()=>{onClose();setPage("pricing");}}/>
         </div>}
 
         {/* Tabs */}
@@ -1287,7 +1287,7 @@ function InviteModal({ open, onClose, learners, setLearners, settings, showToast
   return (
     <Modal open={open} onClose={close} title="Invite New Learners">
       {/* Licence status banner always visible */}
-      <LicenceBanner activeLearners={activeLearners} settings={settings} onUpgrade={()=>{onClose();setPage("subscription");}}/>
+      <LicenceBanner activeLearners={activeLearners} settings={settings} onUpgrade={()=>{onClose();setPage("pricing");}}/>
 
       <div style={{display:"flex",gap:2,background:T.bg,borderRadius:10,padding:4,marginBottom:20,width:"fit-content"}}>
         {[["email","Bulk by Email"],["single","Single Learner"],["csv","Import CSV"]].map(([v,l])=>(
@@ -1402,7 +1402,7 @@ function AssignModal({ open, onClose, courses, setCourses, learners, setLearners
 
   return (
     <Modal open={open} onClose={onClose} title="Assign Course">
-      <LicenceBanner activeLearners={activeLearners} settings={settings} compact onUpgrade={()=>{onClose();setPage("subscription");}}/>
+      <LicenceBanner activeLearners={activeLearners} settings={settings} compact onUpgrade={()=>{onClose();setPage("pricing");}}/>
       <Select label="Select Course" value={courseId} onChange={e=>setCourseId(e.target.value)}>
         {courses.map(c=><option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
       </Select>
@@ -3292,7 +3292,7 @@ function LoginScreen({ onAuth }) {
 // ─── ROOT ─────────────────────────────────────────────────────────────────────
 // BUILD: v3 — storage keys reset, dropdown wizard step
 export default function CSTApp() {
-  const [authed, setAuthed]=useState(()=>!!sessionStorage.getItem("cst:authed"));
+  const [authed, setAuthed]=useState(true); // login disabled temporarily
   const [ready, setReady]=useState(false);
   const [sidebarOpen, setSidebarOpen]=useState(false);
   const [onboarded, setOnboarded]=useState(true); // assume done until storage says otherwise
@@ -3428,7 +3428,7 @@ export default function CSTApp() {
         {page==="assigned"&&<PageAssigned {...commonProps} openAssign={()=>setShowAssign(true)}/>}
         {page==="certs"&&<PageCerts {...commonProps} setCerts={setCerts} setSettings={setSettings}/>}
         {page==="reports"&&<PageReports {...commonProps} initialCourseId={reportCourse} clearReportCourse={()=>setReportCourse(null)}/>}
-        {page==="subscription"&&<PageSubscription {...commonProps} setSettings={setSettings}/>}
+        {page==="pricing"&&<PageSubscription {...commonProps} setSettings={setSettings}/>}
         {page==="settings"&&<PageSettings {...commonProps} setSettings={setSettings} resetOnboarding={resetOnboarding}/>}
         {page==="billing"&&<PageBilling showToast={showToast}/>}
       </div>
