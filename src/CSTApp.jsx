@@ -18,13 +18,13 @@ const LOGO_B64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAAA5CAYAAACx
 
 // ─── SEED DATA ─────────────────────────────────────────────────────────────────
 const SEED_LEARNERS = [
-  { id:"L1", name:"Margaret Whitfield",  email:"margaret.whitfield@careplus.co.uk",  dept:"Care Workers",  initials:"MW", color:"#2A6FDB", status:"Active",  joined:"2025-03-12", progress:100 },
-  { id:"L2", name:"James Thornton",      email:"j.thornton@careplus.co.uk",          dept:"Admin Staff",   initials:"JT", color:"#16A34A", status:"Active",  joined:"2025-03-15", progress:67  },
-  { id:"L3", name:"Fiona Blackwood",     email:"f.blackwood@careplus.co.uk",         dept:"New Starters",  initials:"FB", color:"#DC2626", status:"Pending", joined:"2025-04-01", progress:14  },
-  { id:"L5", name:"William Ashford",     email:"w.ashford@careplus.co.uk",           dept:"Care Workers",  initials:"WA", color:"#0891B2", status:"Active",  joined:"2025-02-03", progress:80  },
-  { id:"L6", name:"Eleanor Pemberton",   email:"e.pemberton@careplus.co.uk",         dept:"Senior Carers", initials:"EP", color:"#BE185D", status:"Active",  joined:"2025-01-20", progress:55  },
-  { id:"L7", name:"Robert Stanwick",     email:"r.stanwick@careplus.co.uk",          dept:"Admin Staff",   initials:"RS", color:"#059669", status:"Active",  joined:"2025-03-08", progress:30  },
-  { id:"L8", name:"Patricia Hollingsworth", email:"p.hollingsworth@careplus.co.uk",  dept:"Volunteers",    initials:"PH", color:"#D97706", status:"Deactivated", joined:"2025-01-05", progress:45 },
+  { id:"L1", name:"Ayan Ahmed",  email:"ayan.ahmed@careplus.co.uk",  dept:"Care Workers",  location:"London",     initials:"AA", color:"#2A6FDB", status:"Active",      joined:"2025-03-12", progress:100, lastLogin:"2 days ago",  access:"Learner", enrolments:{"Care Certificate Standards 1-16":100,"Level 3 Safeguarding Adults Training":100,"Infection Prevention and Control Training":100} },
+  { id:"L2", name:"Alex Rivera", email:"alex.rivera@careplus.co.uk", dept:"Admin Staff",   location:"Bristol",    initials:"AR", color:"#16A34A", status:"Active",      joined:"2025-03-15", progress:67,  lastLogin:"Today",        access:"Learner", enrolments:{"Infection Prevention and Control Training":67,"Emergency First Aid at Work":67} },
+  { id:"L3", name:"Fabian Cole", email:"fabian.cole@careplus.co.uk", dept:"New Starters",  location:"Manchester", initials:"FC", color:"#DC2626", status:"Pending",     joined:"2025-04-01", progress:14,  lastLogin:"Never",        access:"Learner", enrolments:{"Care Certificate Standards 1-16":14} },
+  { id:"L5", name:"Maya Patel",  email:"maya.patel@careplus.co.uk",  dept:"Care Workers",  location:"Birmingham", initials:"MP", color:"#0891B2", status:"Active",      joined:"2025-02-03", progress:80,  lastLogin:"Yesterday",    access:"Learner", enrolments:{"Care Certificate Standards 1-16":80,"Moving and Handling People":80,"Infection Prevention and Control Training":80} },
+  { id:"L6", name:"Lena Brooks", email:"lena.brooks@careplus.co.uk", dept:"Senior Carers", location:"Leeds",      initials:"LB", color:"#BE185D", status:"Active",      joined:"2025-01-20", progress:55,  lastLogin:"3 days ago",   access:"Training Reporter", enrolments:{"Level 3 Safeguarding Adults Training":55,"Medication Administration Level 4":55} },
+  { id:"L7", name:"Omar Hassan", email:"omar.hassan@careplus.co.uk", dept:"Admin Staff",   location:"London",     initials:"OH", color:"#059669", status:"Active",      joined:"2025-03-08", progress:30,  lastLogin:"1 week ago",   access:"Learner", enrolments:{"Infection Prevention and Control Training":30} },
+  { id:"L8", name:"Sara Kim",    email:"sara.kim@careplus.co.uk",    dept:"Volunteers",    location:"Edinburgh",  initials:"SK", color:"#D97706", status:"Deactivated", joined:"2025-01-05", progress:45,  lastLogin:"2 months ago", access:"Learner", enrolments:{"Moving and Handling People":45} },
 ];
 
 const SEED_COURSES = [
@@ -37,9 +37,9 @@ const SEED_COURSES = [
 ];
 
 const SEED_CERTS = [
-  { id:"CT1", learnerId:"L1", learnerName:"Margaret Whitfield",    courseId:"C2", courseName:"Level 3 Safeguarding Adults Training",     claimedOn:"2026-04-21", status:"Active",  type:"Assignment" },
-  { id:"CT2", learnerId:"L1", learnerName:"Margaret Whitfield",    courseId:"C5", courseName:"Infection Prevention and Control Training", claimedOn:"2026-03-15", status:"Active",  type:"Self-enrolment" },
-  { id:"CT4", learnerId:"L8", learnerName:"Patricia Hollingsworth",courseId:"C3", courseName:"Moving and Handling People",               claimedOn:"2026-01-01", status:"Expired", type:"Assignment" },
+  { id:"CT1", learnerId:"L1", learnerName:"Ayan Ahmed", courseId:"C2", courseName:"Level 3 Safeguarding Adults Training",     claimedOn:"2026-04-21", status:"Active",  type:"Assignment" },
+  { id:"CT2", learnerId:"L1", learnerName:"Ayan Ahmed", courseId:"C5", courseName:"Infection Prevention and Control Training", claimedOn:"2026-03-15", status:"Active",  type:"Self-enrolment" },
+  { id:"CT4", learnerId:"L8", learnerName:"Sara Kim",   courseId:"C3", courseName:"Moving and Handling People",               claimedOn:"2026-01-01", status:"Expired", type:"Assignment" },
 ];
 
 const SEED_SETTINGS = {
@@ -222,6 +222,7 @@ const NAV = [
 ];
 
 function Sidebar({ page, setPage, learnerCount, settings, open, onClose }) {
+  const [hovNav,setHovNav]=useState(null);
   return (
     <>
       {open && <div className={`cst-overlay${open?" open":""}`} onClick={onClose}/>}
@@ -233,14 +234,23 @@ function Sidebar({ page, setPage, learnerCount, settings, open, onClose }) {
         <div style={{fontSize:9.5,color:"rgba(255,255,255,.45)",letterSpacing:".08em",textTransform:"uppercase",textAlign:"center"}}>Learning Management Suite</div>
       </div>
       <nav style={{flex:1,padding:"8px 0",overflowY:"auto"}}>
-        {NAV.map(n=>(
-          <div key={n.id} onClick={()=>setPage(n.id)}
-            style={{display:"flex",alignItems:"center",gap:10,padding:"9px 18px",cursor:"pointer",fontSize:12.5,color:page===n.id?"#fff":"rgba(255,255,255,.55)",background:page===n.id?"rgba(42,111,219,.2)":"transparent",borderLeft:`2px solid ${page===n.id?T.accent:"transparent"}`,transition:"all .12s",fontWeight:page===n.id?600:400}}>
-            <Icon d={ICONS[n.icon]} size={15} color={page===n.id?"#fff":"rgba(255,255,255,.55)"}/>
-            <span style={{flex:1}}>{n.label}</span>
-            {n.badge && <span style={{background:T.accent,color:"#fff",fontSize:10,padding:"1px 6px",borderRadius:20,fontWeight:600}}>{learnerCount}</span>}
-          </div>
-        ))}
+        {NAV.map(n=>{
+          const isActive=page===n.id;
+          const isHov=hovNav===n.id&&!isActive;
+          return(
+            <div key={n.id} onClick={()=>setPage(n.id)}
+              onMouseEnter={()=>setHovNav(n.id)} onMouseLeave={()=>setHovNav(null)}
+              style={{display:"flex",alignItems:"center",gap:10,padding:"9px 18px",cursor:"pointer",fontSize:12.5,
+                color:isActive?"#fff":isHov?"rgba(255,255,255,.9)":"rgba(255,255,255,.55)",
+                background:isActive?"rgba(42,111,219,.2)":isHov?"rgba(255,255,255,.07)":"transparent",
+                borderLeft:`2px solid ${isActive?T.accent:"transparent"}`,
+                transition:"background .15s, color .15s",fontWeight:isActive?600:400}}>
+              <Icon d={ICONS[n.icon]} size={15} color={isActive?"#fff":isHov?"rgba(255,255,255,.9)":"rgba(255,255,255,.55)"}/>
+              <span style={{flex:1}}>{n.label}</span>
+              {n.badge && <span style={{background:T.accent,color:"#fff",fontSize:10,padding:"1px 6px",borderRadius:20,fontWeight:600}}>{learnerCount}</span>}
+            </div>
+          );
+        })}
       </nav>
       <div style={{padding:"14px 18px",borderTop:`1px solid rgba(255,255,255,.08)`}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -271,7 +281,7 @@ function Topbar({ page, openInvite, openAssign, onMenuClick }) {
       </div>
       <div className="cst-topbar-actions" style={{display:"flex",gap:10}}>
         <Btn variant="outline" sm onClick={openInvite}><span className="cst-btn-label">+ Add Learner</span></Btn>
-        <Btn variant="primary" sm onClick={openAssign}><span className="cst-btn-label">Assign Course</span></Btn>
+        {page!=="learners"&&<Btn variant="primary" sm onClick={openAssign}><span className="cst-btn-label">Assign Course</span></Btn>}
       </div>
     </div>
   );
@@ -761,121 +771,280 @@ function LearnerProfileModal({user,courses,onSave,onClose,showToast}){
   );
 }
 
-function AddUsersModal({onClose,learners,setLearners,showToast}){
-  const [mode,setMode]=useState("text");
-  const [textVal,setTextVal]=useState("ali.khan@example.com, Ali Khan, Care Workers, London\nmaria.woods@example.com, Maria Woods, Admin Staff, Bristol");
+function AddUsersModal({onClose,learners,setLearners,showToast,settings,setPage}){
+  const [tab,setTab]=useState("bulk");
+  const [hovTab,setHovTab]=useState(null);
+  // bulk by email
+  const [bulkEmails,setBulkEmails]=useState(["","",""]);
+  const [bulkStep,setBulkStep]=useState(1);
+  const [bulkMsg,setBulkMsg]=useState(`Good news! ${settings?.companyName||"Your organisation"} has invited you to the Care Skills Training platform.`);
+  // single learner
+  const [sFirst,setSFirst]=useState("");
+  const [sLast,setSLast]=useState("");
+  const [sEmail,setSEmail]=useState("");
+  const [sDept,setSDept]=useState(settings?.departments?.[0]||"");
+  // import csv
+  const [csvMode,setCsvMode]=useState("text");
+  const [textVal,setTextVal]=useState("");
   const [csvText,setCsvText]=useState("");
-  const [mapping,setMapping]=useState(["email","name","dept","location"]);
+  const [fileName,setFileName]=useState("No file selected");
   const [parsedRows,setParsedRows]=useState([]);
   const [showMapping,setShowMapping]=useState(false);
+  const [mapping]=useState(["email","name","dept","location"]);
   const [sendWelcome,setSendWelcome]=useState(true);
 
+  const activeLearners=learners.filter(l=>l.status!=="Deactivated").length;
+  const licenceExhausted=settings&&(activeLearners>=settings.totalLicences);
+  const COLORS=["#2A6FDB","#16A34A","#DC2626","#7C3AED","#0891B2","#BE185D","#059669"];
+  const FIELD_OPTS=["email","name","dept","location","skip"];
   const parseRows=(src)=>src.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>l.split(",").map(c=>c.trim().replace(/^"|"$/g,"")));
 
-  const handleStart=()=>{
-    const src=mode==="text"?textVal:csvText;
+  const makeUser=(rec,prev)=>{
+    const nm=(rec.name||rec.email).trim();
+    const parts=nm.split(" ");
+    const init=(parts[0]?.[0]+(parts[1]?.[0]||"")).toUpperCase();
+    return{id:"L"+Date.now()+Math.random(),name:nm,email:rec.email,dept:rec.dept||"Unassigned",location:rec.location||"",initials:init,color:COLORS[prev.length%COLORS.length],status:"Active",joined:new Date().toISOString().split("T")[0],progress:0,access:"Learner",enrolments:{},events:[sendWelcome?"Welcome email queued":"Imported"]};
+  };
+
+  const handleFile=(e)=>{
+    const f=e.target.files[0];if(!f)return;
+    setFileName(f.name);
+    new FileReader().onload=ev=>{setCsvText(ev.target.result);setShowMapping(false);};
+    const r=new FileReader();r.onload=ev=>{setCsvText(ev.target.result);setShowMapping(false);};r.readAsText(f);
+  };
+
+  const handleImport=()=>{
+    const src=csvMode==="text"?textVal:csvText;
     const rows=parseRows(src);
     if(!rows.length){showToast("Add at least one row.","error");return;}
     if(!showMapping){setParsedRows(rows);setShowMapping(true);showToast("Check column mapping, then start upload again.");return;}
-
-    const FIELDS=["email","name","dept","location","skip"];
-    let added=0,updated=0;
     const cols=[...document.querySelectorAll("[data-map-sel]")].map(s=>s.value);
-    const finalMapping=cols.length?cols:mapping;
-
+    const fm=cols.length?cols:mapping;
+    let added=0,updated=0;
     setLearners(prev=>{
       const next=[...prev];
       for(const row of parsedRows){
-        const rec={};
-        finalMapping.forEach((f,i)=>{if(f!=="skip")rec[f]=row[i]||"";});
+        const rec={};fm.forEach((f,i)=>{if(f!=="skip")rec[f]=row[i]||"";});
         if(!rec.email)continue;
-        const existing=next.find(u=>u.email.toLowerCase()===rec.email.toLowerCase());
-        const colors=["#2A6FDB","#16A34A","#DC2626","#7C3AED","#0891B2","#BE185D","#059669"];
-        if(existing){
-          Object.assign(existing,{name:rec.name||existing.name,dept:rec.dept||existing.dept,location:rec.location||existing.location,events:[...(existing.events||[]),"Updated by import"]});
-          updated++;
-        } else {
-          const nm=rec.name||rec.email;
-          const parts=nm.split(" ");
-          const init=(parts[0][0]+(parts[1]?.[0]||"")).toUpperCase();
-          next.push({id:"L"+Date.now()+Math.random(),name:nm,email:rec.email,dept:rec.dept||"Unassigned",location:rec.location||"",initials:init,color:colors[next.length%colors.length],status:"Active",joined:new Date().toISOString().split("T")[0],progress:0,access:"Learner",enrolments:{},events:[sendWelcome?"Welcome email queued":"Imported"]});
-          added++;
-        }
+        const ex=next.find(u=>u.email.toLowerCase()===rec.email.toLowerCase());
+        if(ex){Object.assign(ex,{name:rec.name||ex.name,dept:rec.dept||ex.dept,location:rec.location||ex.location,events:[...(ex.events||[]),"Updated by import"]});updated++;}
+        else{next.push(makeUser(rec,next));added++;}
       }
       return next;
     });
-    showToast(`${added} added, ${updated} updated${sendWelcome?", welcome emails queued":""}.`);
-    onClose();
+    showToast(`${added} added, ${updated} updated.`);onClose();
   };
 
-  const exportCSV=()=>{
-    const headers=["name","email","dept","location","status","access","progress"];
-    const rows=learners.map(l=>[l.name,l.email,l.dept||"",l.location||"",l.status,l.access||"Learner",l.progress||0]);
-    const csv=[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
-    a.download="learners.csv";a.click();URL.revokeObjectURL(a.href);
-    showToast("CSV exported.");
+  const handleSingle=()=>{
+    if(!sEmail){showToast("Email required.","error");return;}
+    const nm=`${sFirst} ${sLast}`.trim()||sEmail;
+    const parts=nm.split(" ");
+    const init=(parts[0]?.[0]+(parts[1]?.[0]||"")).toUpperCase();
+    setLearners(prev=>[...prev,{id:"L"+Date.now(),name:nm,email:sEmail,dept:sDept||"Unassigned",initials:init,color:COLORS[prev.length%COLORS.length],status:"Pending",joined:new Date().toISOString().split("T")[0],progress:0,access:"Learner",enrolments:{},events:["Added individually"]}]);
+    showToast(`✅ ${nm} added.`);onClose();
   };
 
-  const sampleRow=parsedRows[0]||[];
-  const FIELD_OPTS=["email","name","dept","location","skip"];
+  const handleBulkNext=()=>{
+    const valid=bulkEmails.filter(e=>e.trim());
+    if(!valid.length){showToast("Enter at least one email.","error");return;}
+    setBulkStep(2);
+  };
+
+  const handleBulkSend=()=>{
+    const valid=bulkEmails.filter(e=>e.trim());
+    showToast(`✉️ ${valid.length} invitation${valid.length>1?"s":""} sent!`);onClose();
+  };
+
+  const TABS=[["bulk","Bulk by Email"],["single","Single Learner"],["csv","Import CSV"]];
+
+  const Panel=({children})=>(
+    <div style={{padding:"0 28px 24px"}}>{children}</div>
+  );
+
+  const Footer=({left,right})=>(
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingTop:16,borderTop:`1px solid ${T.border}`,marginTop:8}}>
+      {left}<div style={{display:"flex",gap:8}}>{right}</div>
+    </div>
+  );
 
   return(
-    <Modal open onClose={onClose} title="Add / Update Users">
-      <div style={{display:"flex",gap:2,background:T.bg,borderRadius:10,padding:4,width:"fit-content",marginBottom:16}}>
-        {[["text","Text entry"],["csv","Spreadsheet"]].map(([v,l])=>(
-          <button key={v} onClick={()=>{setMode(v);setShowMapping(false);}} style={{padding:"6px 16px",borderRadius:8,fontSize:12.5,fontWeight:500,cursor:"pointer",border:"none",background:mode===v?T.white:"transparent",color:mode===v?T.text:T.text3,fontFamily:T.font}}>{l}</button>
-        ))}
-      </div>
+    <div onClick={e=>{if(e.target===e.currentTarget)onClose();}} style={{position:"fixed",inset:0,background:"rgba(11,30,61,.5)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+      <div style={{background:T.white,borderRadius:18,width:"100%",maxWidth:540,maxHeight:"92vh",overflowY:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.2)",animation:"fadeUp .2s ease"}}>
 
-      {mode==="text"&&(
-        <div style={{marginBottom:12}}>
-          <div style={{fontSize:12,fontWeight:600,color:T.text2,marginBottom:5}}>One user per row</div>
-          <textarea value={textVal} onChange={e=>{setTextVal(e.target.value);setShowMapping(false);}} rows={6} style={{width:"100%",boxSizing:"border-box",padding:"9px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:12.5,fontFamily:"monospace",resize:"vertical"}}/>
-          <div style={{fontSize:11.5,color:T.text3,marginTop:4}}>Format: email, name, department, location</div>
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",padding:"24px 28px 16px"}}>
+          <div>
+            <p style={{fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:".09em",color:T.accent,marginBottom:6}}>Add/update users</p>
+            <h2 style={{fontSize:20,fontWeight:700,color:T.text,margin:0}}>Import learners</h2>
+          </div>
+          <button onClick={onClose} style={{background:T.bg,border:`1px solid ${T.border}`,borderRadius:8,cursor:"pointer",padding:"5px 10px",fontSize:14,color:T.text3,lineHeight:1,marginTop:2}}>✕</button>
         </div>
-      )}
 
-      {mode==="csv"&&(
-        <div style={{marginBottom:12}}>
-          <textarea value={csvText} onChange={e=>{setCsvText(e.target.value);setShowMapping(false);}} rows={6} placeholder="Paste CSV content here…" style={{width:"100%",boxSizing:"border-box",padding:"9px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:12.5,fontFamily:"monospace",resize:"vertical"}}/>
-        </div>
-      )}
+        {/* Licence banner */}
+        {settings&&<div style={{padding:"0 28px 12px"}}>
+          <LicenceBanner activeLearners={activeLearners} settings={settings} onUpgrade={()=>{onClose();setPage("subscription");}}/>
+        </div>}
 
-      {showMapping&&sampleRow.length>0&&(
-        <div style={{marginBottom:16,padding:"12px",background:T.bg,borderRadius:8,border:`1px solid ${T.border}`}}>
-          <div style={{fontSize:12,fontWeight:700,color:T.text2,marginBottom:8}}>Map columns</div>
-          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            {sampleRow.map((cell,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:10}}>
-                <div style={{fontSize:12,color:T.text,background:T.white,border:`1px solid ${T.border}`,borderRadius:6,padding:"4px 10px",minWidth:140,fontFamily:"monospace"}}>{cell||`Column ${i+1}`}</div>
-                <select data-map-sel defaultValue={mapping[i]||"skip"} style={{padding:"4px 8px",border:`1px solid ${T.border}`,borderRadius:6,fontSize:12,fontFamily:T.font}}>
-                  {FIELD_OPTS.map(f=><option key={f} value={f}>{f}</option>)}
-                </select>
-              </div>
-            ))}
+        {/* Tabs */}
+        <div style={{padding:"0 28px 16px"}}>
+          <div style={{display:"flex",gap:0,border:`1px solid ${T.border}`,borderRadius:10,overflow:"hidden",width:"fit-content"}}>
+            {TABS.map(([v,l],i)=>{
+              const isAct=tab===v;
+              const isHov=hovTab===v;
+              return(
+                <button key={v} onClick={()=>{setTab(v);setShowMapping(false);setBulkStep(1);}}
+                  onMouseEnter={()=>setHovTab(v)} onMouseLeave={()=>setHovTab(null)}
+                  style={{padding:"8px 18px",fontSize:13,fontWeight:isAct?700:500,cursor:"pointer",
+                    border:"none",borderRight:i<TABS.length-1?`1px solid ${T.border}`:"none",
+                    background:isAct?T.navy:isHov?T.bg:T.white,
+                    color:isAct?"#fff":isHov?T.text:T.text2,
+                    fontFamily:T.font,transition:"background .15s,color .15s",whiteSpace:"nowrap"}}>
+                  {l}
+                </button>
+              );
+            })}
           </div>
         </div>
-      )}
 
-      <label style={{display:"flex",alignItems:"center",gap:8,marginBottom:16,cursor:"pointer",fontSize:13,color:T.text2}}>
-        <input type="checkbox" checked={sendWelcome} onChange={e=>setSendWelcome(e.target.checked)} style={{accentColor:T.accent}}/>
-        Send users a training suite welcome email
-      </label>
+        {/* ── Bulk by Email ── */}
+        {tab==="bulk"&&bulkStep===1&&<Panel>
+          <p style={{fontSize:13,color:T.text3,marginBottom:14}}>Enter emails to invite multiple learners at once:</p>
+          {bulkEmails.map((e,i)=>(
+            <div key={i} style={{display:"flex",gap:8,marginBottom:8,alignItems:"center"}}>
+              <Av initials={String(i+1)} color={T.navy} size={28}/>
+              <input value={e} onChange={ev=>{const a=[...bulkEmails];a[i]=ev.target.value;setBulkEmails(a);}}
+                placeholder="Type user email" disabled={licenceExhausted}
+                style={{flex:1,padding:"8px 12px",border:`1px solid ${licenceExhausted?T.redMid:T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,outline:"none",background:licenceExhausted?"#FFF5F5":T.white}}/>
+            </div>
+          ))}
+          <Btn variant="ghost" sm onClick={()=>setBulkEmails([...bulkEmails,""])} style={{marginTop:4,marginBottom:20,opacity:licenceExhausted?.4:1}}>+ Add more</Btn>
+          <Footer left={<Btn variant="outline" onClick={onClose}>Cancel</Btn>} right={[
+            <Btn key="next" variant="primary" onClick={handleBulkNext} style={{opacity:licenceExhausted?.5:1}}>Next →</Btn>
+          ]}/>
+        </Panel>}
 
-      <div style={{display:"flex",justifyContent:"space-between",paddingTop:16,borderTop:`1px solid ${T.border}`}}>
-        <Btn variant="ghost" onClick={exportCSV}>Export CSV</Btn>
-        <div style={{display:"flex",gap:8}}>
-          <Btn variant="outline" onClick={onClose}>Cancel</Btn>
-          <Btn variant="primary" onClick={handleStart}>Start upload</Btn>
-        </div>
+        {tab==="bulk"&&bulkStep===2&&<Panel>
+          <div style={{display:"flex",gap:6,marginBottom:12}}>
+            <div style={{flex:1,height:4,borderRadius:4,background:T.accent}}/>
+            <div style={{flex:1,height:4,borderRadius:4,background:T.accent}}/>
+          </div>
+          <div style={{fontSize:12,color:T.text3,marginBottom:16}}>Step 2 of 2 — Customise the invitation message</div>
+          <div style={{marginBottom:14}}>
+            <div style={{fontSize:12,fontWeight:600,color:T.text2,marginBottom:5}}>Custom message</div>
+            <textarea value={bulkMsg} onChange={e=>setBulkMsg(e.target.value)} rows={3}
+              style={{width:"100%",padding:"9px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,resize:"vertical",boxSizing:"border-box",outline:"none"}}/>
+          </div>
+          <Footer left={<Btn variant="outline" onClick={()=>setBulkStep(1)}>← Back</Btn>} right={[
+            <Btn key="send" variant="primary" onClick={handleBulkSend}>Send Invitations</Btn>
+          ]}/>
+        </Panel>}
+
+        {/* ── Single Learner ── */}
+        {tab==="single"&&<Panel>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,opacity:licenceExhausted?.5:1,pointerEvents:licenceExhausted?"none":"auto"}}>
+            <Input label="First name" value={sFirst} onChange={e=>setSFirst(e.target.value)} placeholder="First name"/>
+            <Input label="Last name" value={sLast} onChange={e=>setSLast(e.target.value)} placeholder="Last name"/>
+          </div>
+          <div style={{opacity:licenceExhausted?.5:1,pointerEvents:licenceExhausted?"none":"auto"}}>
+            <Input label="Email address" type="email" value={sEmail} onChange={e=>setSEmail(e.target.value)} placeholder="email@company.com"/>
+            <Select label="Department" value={sDept} onChange={e=>setSDept(e.target.value)}>
+              {(settings?.departments||[]).map(d=><option key={d}>{d}</option>)}
+            </Select>
+          </div>
+          <Footer left={<Btn variant="outline" onClick={onClose}>Cancel</Btn>} right={[
+            <Btn key="add" variant="primary" onClick={handleSingle} style={{opacity:licenceExhausted?.5:1}}>Invite & Add</Btn>
+          ]}/>
+        </Panel>}
+
+        {/* ── Import CSV ── */}
+        {tab==="csv"&&<Panel>
+          {/* sub-toggle */}
+          <div style={{display:"flex",gap:2,background:T.bg,borderRadius:10,padding:3,width:"fit-content",marginBottom:16}}>
+            {[["text","Text entry"],["sheet","Spreadsheet"]].map(([v,l])=>(
+              <button key={v} onClick={()=>{setCsvMode(v);setShowMapping(false);}}
+                style={{padding:"6px 16px",borderRadius:8,fontSize:12.5,fontWeight:500,cursor:"pointer",border:"none",background:csvMode===v?T.white:"transparent",color:csvMode===v?T.text:T.text3,fontFamily:T.font,boxShadow:csvMode===v?"0 1px 4px rgba(0,0,0,.08)":"none"}}>
+                {l}
+              </button>
+            ))}
+          </div>
+
+          {csvMode==="text"&&(
+            <div style={{marginBottom:12}}>
+              <div style={{fontSize:12,fontWeight:600,color:T.text2,marginBottom:6}}>Enter one user per row</div>
+              <textarea value={textVal} onChange={e=>{setTextVal(e.target.value);setShowMapping(false);}} rows={6}
+                style={{width:"100%",boxSizing:"border-box",padding:"9px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:12.5,fontFamily:"monospace",resize:"vertical",outline:"none"}}/>
+              <div style={{fontSize:12,color:T.text3,marginTop:5}}>Format: email, name, department, location</div>
+            </div>
+          )}
+
+          {csvMode==="sheet"&&(
+            <div style={{marginBottom:12}}>
+              <label htmlFor="csvFileInput" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:8,padding:"24px 20px",border:`2px dashed ${T.border}`,borderRadius:10,background:T.bg,cursor:"pointer",marginBottom:10,textAlign:"center"}}>
+                <div style={{fontSize:13,fontWeight:700,color:T.text}}>Select CSV file</div>
+                <div style={{fontSize:12,color:T.text3}}>{fileName}</div>
+                <input id="csvFileInput" type="file" accept=".csv,text/csv" style={{fontSize:13}} onChange={handleFile}/>
+              </label>
+              <textarea value={csvText} onChange={e=>{setCsvText(e.target.value);setShowMapping(false);}} rows={4}
+                placeholder="Or paste CSV content here"
+                style={{width:"100%",boxSizing:"border-box",padding:"9px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:12.5,fontFamily:"monospace",resize:"vertical",outline:"none"}}/>
+            </div>
+          )}
+
+          {showMapping&&parsedRows[0]?.length>0&&(
+            <div style={{marginBottom:14,padding:"12px",background:T.bg,borderRadius:8,border:`1px solid ${T.border}`}}>
+              <div style={{fontSize:12,fontWeight:700,color:T.text2,marginBottom:8}}>Map columns</div>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {parsedRows[0].map((cell,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{fontSize:12,color:T.text,background:T.white,border:`1px solid ${T.border}`,borderRadius:6,padding:"4px 10px",minWidth:140,fontFamily:"monospace"}}>{cell||`Column ${i+1}`}</div>
+                    <select data-map-sel defaultValue={mapping[i]||"skip"} style={{padding:"4px 8px",border:`1px solid ${T.border}`,borderRadius:6,fontSize:12,fontFamily:T.font}}>
+                      {FIELD_OPTS.map(f=><option key={f} value={f}>{f}</option>)}
+                    </select>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <label style={{display:"flex",alignItems:"center",gap:8,marginBottom:18,cursor:"pointer",fontSize:13,color:T.text2}}>
+            <input type="checkbox" checked={sendWelcome} onChange={e=>setSendWelcome(e.target.checked)} style={{accentColor:T.accent,width:15,height:15}}/>
+            Send users a training suite welcome email
+          </label>
+
+          <Footer left={<Btn variant="outline" onClick={onClose}>Cancel</Btn>} right={[
+            <Btn key="up" variant="primary" onClick={handleImport}>Start upload</Btn>
+          ]}/>
+        </Panel>}
+
       </div>
-    </Modal>
+    </div>
   );
 }
 
-function PageLearners({ learners, setLearners, courses, settings, showToast, openInvite, setPage }) {
+function HdrActions({ openAssign, openImport }) {
+  const [hov,setHov]=useState(null);
+  const btns=[["import","Add / update users",openImport],["assign","Assign Course",openAssign]];
+  return(
+    <div style={{display:"flex",gap:2,background:T.bg,borderRadius:10,padding:3,flexShrink:0}}>
+      {btns.map(([key,label,action])=>{
+        const isHov=hov===key;
+        return(
+          <button key={key} onClick={action}
+            onMouseEnter={()=>setHov(key)} onMouseLeave={()=>setHov(null)}
+            style={{padding:"7px 18px",borderRadius:8,fontSize:12.5,fontWeight:500,cursor:"pointer",border:"none",
+              background:T.white,
+              color:isHov?T.text:T.text2,
+              boxShadow:isHov?"0 2px 8px rgba(0,0,0,.13)":"0 1px 3px rgba(0,0,0,.08)",
+              fontFamily:T.font,transition:"color .15s ease, box-shadow .15s ease",whiteSpace:"nowrap"}}>
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function PageLearners({ learners, setLearners, courses, settings, showToast, openInvite, openAssign, setPage }) {
   const [tab,setTab]=useState("active");
   const [hovTab,setHovTab]=useState(null);
   const [q,setQ]=useState("");
@@ -924,10 +1093,7 @@ function PageLearners({ learners, setLearners, courses, settings, showToast, ope
         <div>
           <p style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:".09em",color:T.text3,marginBottom:0}}>User management</p>
         </div>
-        <div style={{display:"flex",gap:8,flexShrink:0,paddingTop:4}}>
-          <Btn variant="outline" sm onClick={handleExportCSV}>Export CSV</Btn>
-          <Btn variant="primary" sm onClick={()=>setShowImport(true)}>Add / update users</Btn>
-        </div>
+        <HdrActions openAssign={openAssign} openImport={()=>setShowImport(true)}/>
       </div>
 
       {/* Metric cards */}
@@ -952,7 +1118,7 @@ function PageLearners({ learners, setLearners, courses, settings, showToast, ope
               const isHov=hovTab===v;
               const otherHov=hovTab&&hovTab!==v;
               const color=isActive?(otherHov?T.text3:T.text):isHov?T.text:T.text3;
-              const bg=isActive&&!otherHov?T.white:"transparent";
+              const bg=isActive&&!otherHov?T.white:isHov?"rgba(255,255,255,0.6)":"transparent";
               return(
                 <button key={v} onClick={()=>setTab(v)} onMouseEnter={()=>setHovTab(isActive?null:v)} onMouseLeave={()=>setHovTab(null)}
                   style={{padding:"7px 18px",borderRadius:8,fontSize:12.5,fontWeight:500,cursor:"pointer",border:"none",background:bg,color,boxShadow:isActive&&!otherHov?"0 1px 4px rgba(0,0,0,.1)":"none",fontFamily:T.font,transition:"color .2s ease, background .2s ease",whiteSpace:"nowrap"}}>
@@ -963,7 +1129,7 @@ function PageLearners({ learners, setLearners, courses, settings, showToast, ope
           </div>
 
           {/* Labeled search — flex-grow, right side */}
-          <label style={{display:"flex",flexDirection:"column",gap:4,flex:1,minWidth:220,maxWidth:380}}>
+          <label style={{display:"flex",flexDirection:"column",gap:4,flex:1,minWidth:220}}>
             <span style={{fontSize:11,fontWeight:600,color:T.text3,lineHeight:1}}>Search</span>
             <div style={{display:"flex",alignItems:"center",gap:8,background:T.bg,border:`1px solid ${T.border}`,borderRadius:8,padding:"7px 12px"}}>
               <Icon d={ICONS.search} size={14} color={T.text3}/>
@@ -971,12 +1137,15 @@ function PageLearners({ learners, setLearners, courses, settings, showToast, ope
             </div>
           </label>
 
-          {/* Course filter — own row (flex-basis 100%) */}
-          <select value={courseFilter} onChange={e=>setCourseFilter(e.target.value)}
-            style={{flexBasis:"100%",padding:"8px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,background:T.white,color:T.text,cursor:"pointer"}}>
-            <option value="all">All courses</option>
-            {courses.map(c=><option key={c.id} value={c.name}>{c.name}</option>)}
-          </select>
+          {/* Course filter + Export CSV — own row */}
+          <div style={{flexBasis:"100%",display:"flex",gap:16,alignItems:"center",flexWrap:"wrap"}}>
+            <select value={courseFilter} onChange={e=>setCourseFilter(e.target.value)}
+              style={{flex:1,minWidth:160,padding:"8px 12px",border:`1px solid ${T.border}`,borderRadius:8,fontSize:13,fontFamily:T.font,background:T.white,color:T.text,cursor:"pointer"}}>
+              <option value="all">All courses</option>
+              {courses.map(c=><option key={c.id} value={c.name}>{c.name}</option>)}
+            </select>
+            <Btn variant="outline" onClick={handleExportCSV}>Export CSV</Btn>
+          </div>
         </div>
 
         {/* Table */}
@@ -984,7 +1153,7 @@ function PageLearners({ learners, setLearners, courses, settings, showToast, ope
           <table style={{width:"100%",borderCollapse:"collapse",minWidth:700}}>
             <thead>
               <tr>{["Name","Profile","Segment","Courses","Progress","Last login","Actions"].map(h=>(
-                <th key={h} style={{textAlign:"left",padding:"11px 18px",fontSize:11.5,color:T.text3,fontWeight:600,borderBottom:`1px solid ${T.border}`,background:T.bg,whiteSpace:"nowrap"}}>{h}</th>
+                <th key={h} style={{textAlign:h==="Actions"?"center":"left",padding:"11px 18px",fontSize:11.5,color:T.text3,fontWeight:600,borderBottom:`1px solid ${T.border}`,background:T.bg,whiteSpace:"nowrap"}}>{h}</th>
               ))}</tr>
             </thead>
             <tbody>
@@ -1004,15 +1173,15 @@ function PageLearners({ learners, setLearners, courses, settings, showToast, ope
                     <td style={{padding:"13px 18px"}}>
                       <span style={{fontSize:11.5,fontWeight:600,padding:"3px 9px",borderRadius:20,background:l.access&&l.access!=="Learner"?T.accentLight:T.bg,color:l.access&&l.access!=="Learner"?T.accent:T.text3}}>{l.access||"Learner"}</span>
                     </td>
-                    <td style={{padding:"13px 18px",fontSize:12.5,color:T.text2}}>
-                      {l.dept||"—"}
-                      {l.location&&<div style={{fontSize:11.5,color:T.text3,marginTop:1}}>{l.location}</div>}
+                    <td style={{padding:"13px 18px"}}>
+                      <div style={{fontSize:12.5,fontWeight:500,color:T.text2}}>{l.dept||"—"}</div>
+                      <div style={{fontSize:11.5,color:T.text3,marginTop:2}}>{l.location||"—"}</div>
                     </td>
                     <td style={{padding:"13px 18px",fontSize:13,color:T.text2}}>{courseCount>0?`${courseCount} enrolled`:"—"}</td>
                     <td style={{padding:"13px 18px",minWidth:130}}><ProgCell pct={l.progress||0}/></td>
                     <td style={{padding:"13px 18px",fontSize:12,color:T.text3,whiteSpace:"nowrap"}}>{l.lastLogin||"Never"}</td>
-                    <td style={{padding:"13px 18px"}}>
-                      <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                    <td style={{padding:"13px 18px",textAlign:"center"}}>
+                      <div style={{display:"inline-flex",gap:6,flexWrap:"nowrap"}}>
                         {l.status==="Pending"&&<Btn variant="accent" sm onClick={()=>handleApprove(l.id)}>Approve</Btn>}
                         <Btn variant="outline" sm onClick={()=>setProfileUser(l)}>Profile</Btn>
                         {l.status==="Deactivated"
@@ -1032,7 +1201,7 @@ function PageLearners({ learners, setLearners, courses, settings, showToast, ope
       </div>
 
       {profileUser&&<LearnerProfileModal user={profileUser} courses={courses} onSave={handleSaveProfile} onClose={()=>setProfileUser(null)} showToast={showToast}/>}
-      {showImport&&<AddUsersModal onClose={()=>setShowImport(false)} learners={learners} setLearners={setLearners} showToast={showToast}/>}
+      {showImport&&<AddUsersModal onClose={()=>setShowImport(false)} learners={learners} setLearners={setLearners} showToast={showToast} settings={settings} setPage={setPage}/>}
     </div>
   );
 }
@@ -2505,12 +2674,9 @@ function CourseShop({showToast,onShowDiscount}){
                       </td>
                       <td style={{padding:"14px 16px",textAlign:"right"}}>
                         {tier.pct>0?(
-                          <div>
-                            <div style={{fontSize:13.5,fontWeight:600,color:T.text}}>£{(course.price*(1-tier.pct/100)*(qtyInputs[course.id]===''?1:qty)).toFixed(2)}</div>
-                            <div style={{fontSize:11,color:T.text3,marginTop:1}}>£{(course.price*(1-tier.pct/100)).toFixed(2)}/unit</div>
-                          </div>
+                          <span style={{fontSize:13.5,fontWeight:600,color:T.text}}>£{(course.price*(1-tier.pct/100)).toFixed(2)}/licence</span>
                         ):(
-                          <span style={{fontSize:13.5,fontWeight:600,color:T.text}}>£{(course.price*(qtyInputs[course.id]===''?1:qty)).toFixed(2)}</span>
+                          <span style={{fontSize:13.5,fontWeight:600,color:T.text}}>£{course.price.toFixed(2)}/licence</span>
                         )}
                       </td>
                       <td style={{padding:"14px 16px",textAlign:"center"}}><button onClick={()=>removeItem(course.id)} style={{background:"none",border:"none",cursor:"pointer",color:T.text3,fontSize:20,lineHeight:1,padding:0}}>×</button></td>
@@ -2520,12 +2686,12 @@ function CourseShop({showToast,onShowDiscount}){
               </table>
             </div>
             {courseNextTier&&(
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,background:"linear-gradient(135deg,#E6F9FA 0%,#D4F5F7 100%)",border:"1px solid #45cedd",borderRadius:8,padding:"9px 14px",fontSize:13,color:"#0b5159",fontWeight:500}}>
-                <span style={{display:"flex",alignItems:"center",gap:6}}>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="#16c2d5" strokeWidth="2" strokeLinecap="round"/></svg>
-                  Add <strong style={{color:"#095159",margin:"0 2px"}}>{courseNeeded}</strong> more licence{courseNeeded>1?"s":""} to get <strong style={{color:"#095159",margin:"0 2px"}}>{courseNextTier.pct}% off</strong>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,background:"linear-gradient(135deg,#E6F9FA 0%,#D4F5F7 100%)",border:"1px solid #45cedd",borderRadius:10,padding:"12px 18px",fontSize:13,color:"#0b5159",fontWeight:500}}>
+                <span style={{display:"flex",alignItems:"center",gap:8}}>
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{flexShrink:0}}><path d="M8 1v14M1 8h14" stroke="#16c2d5" strokeWidth="2" strokeLinecap="round"/></svg>
+                  Add{" "}<strong style={{color:"#095159",fontWeight:700}}>{courseNeeded}</strong>{" "}more licence{courseNeeded>1?"s":""} to get{" "}<strong style={{color:"#095159",fontWeight:700}}>{courseNextTier.pct}% off</strong>
                 </span>
-                <span style={{fontSize:12,color:"#16c2d5",fontWeight:600,flexShrink:0}}>{totalQty} / {courseNextTier.min} licences</span>
+                <span style={{fontSize:12,color:"#16c2d5",fontWeight:700,flexShrink:0,letterSpacing:".02em"}}>{totalQty} / {courseNextTier.min} licences</span>
               </div>
             )}
           </div>
@@ -2613,21 +2779,44 @@ function LicenceShop({showToast}){
         <span style={{fontSize:13.5,fontWeight:500,color:"#1a1a2e"}}>
           Give your team every care course they need
         </span>
-        <span style={{fontSize:13,fontWeight:700,color:"#4F6EF7",flexShrink:0,whiteSpace:"nowrap"}}>From £2.46<span style={{fontWeight:400,fontSize:11,color:"#6B7280"}}> /user/mo · billed annually</span></span>
+        <span style={{fontSize:13,fontWeight:700,color:"#4F6EF7",flexShrink:0,whiteSpace:"nowrap"}}>From £{(BASE*(1-Math.max(...VOL_TIERS.map(t=>t.pct))/100)/12).toFixed(2)}<span style={{fontWeight:400,fontSize:11,color:"#6B7280"}}> /user/mo · billed annually</span></span>
       </div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 260px",gap:20,alignItems:"start"}}>
         <div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:"24px"}}>
           <div style={{fontSize:14,fontWeight:700,color:T.text,marginBottom:18}}>How many licences do you need?</div>
+
+          {/* Stepper + unit price */}
           <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:18}}>
             <div style={{display:"flex",alignItems:"center",border:`1px solid ${T.border}`,borderRadius:10,overflow:"hidden",flexShrink:0}}>
               <button onClick={()=>setQty(q=>Math.max(1,q-1))} style={{width:44,height:44,border:"none",background:T.bg,cursor:"pointer",fontSize:22,color:T.text2,lineHeight:1}}>−</button>
-              <input type="number" value={qtyInput!==null?qtyInput:qty} min={1} max={999} onChange={e=>{setQtyInput(e.target.value);const v=parseInt(e.target.value);if(!isNaN(v)&&v>=1&&v<=999)setQty(v);}} onBlur={()=>{setQtyInput(null);if(!qty||qty<1)setQty(1);}} style={{width:60,height:44,border:"none",textAlign:"center",fontSize:16,fontWeight:700,fontFamily:T.font,outline:"none",color:T.text}}/>
+              <input type="number" value={qtyInput!==null?qtyInput:qty} min={1}
+                onChange={e=>{setQtyInput(e.target.value);const v=parseInt(e.target.value);if(!isNaN(v)&&v>=1)setQty(v);}}
+                onBlur={()=>{setQtyInput(null);if(!qty||qty<1)setQty(1);}}
+                style={{width:70,height:44,border:"none",textAlign:"center",fontSize:16,fontWeight:700,fontFamily:T.font,outline:"none",color:T.text}}/>
               <button onClick={()=>setQty(q=>q+1)} style={{width:44,height:44,border:"none",background:T.bg,cursor:"pointer",fontSize:22,color:T.text2,lineHeight:1}}>+</button>
             </div>
             <span style={{fontSize:13.5,color:T.text2}}>× <strong style={{color:T.text}}>£{unitPrice.toFixed(2)}</strong>/user/yr <span style={{opacity:.55,fontSize:12}}>(£{(unitPrice/12).toFixed(2)}/user/mo, billed annually)</span></span>
           </div>
-          <input type="range" min={1} max={499} value={Math.min(qty,499)} onChange={e=>setQty(Number(e.target.value))} style={{width:"100%",accentColor:T.accent,cursor:"pointer",marginBottom:6}}/>
-          <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:T.text3,marginBottom:16}}><span>1</span><span>10</span><span>50</span><span>100</span><span>250</span><span>500+</span></div>
+
+          {/* Piecewise-linear slider — labels evenly spaced, positions match values */}
+          {(()=>{
+            const TICKS=[[0,1],[20,10],[40,50],[60,100],[80,250],[100,500]];
+            const sToQ=s=>{for(let i=0;i<TICKS.length-1;i++){const[s1,q1]=TICKS[i],[s2,q2]=TICKS[i+1];if(s>=s1&&s<=s2)return Math.round(q1+(s-s1)/(s2-s1)*(q2-q1));}return 500;};
+            const qToS=q=>{const cq=Math.min(Math.max(q,1),500);for(let i=0;i<TICKS.length-1;i++){const[s1,q1]=TICKS[i],[s2,q2]=TICKS[i+1];if(cq>=q1&&cq<=q2)return Math.round(s1+(cq-q1)/(q2-q1)*(s2-s1));}return 100;};
+            return(<>
+              <input type="range" min={0} max={100} value={qToS(qty)}
+                onChange={e=>setQty(sToQ(Number(e.target.value)))}
+                style={{width:"100%",accentColor:T.accent,cursor:"pointer",marginBottom:6}}/>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:16}}>
+                {TICKS.map(([,lbl])=>(
+                  <span key={lbl} onClick={()=>setQty(lbl)}
+                    style={{fontSize:11,color:T.text3,cursor:"pointer",userSelect:"none"}}>
+                    {lbl===500?"500+":lbl}
+                  </span>
+                ))}
+              </div>
+            </>);
+          })()}
           {(()=>{
             const nextTier=VOL_TIERS.find(t=>t.min>displayQty&&t.pct!==null);
             if(!nextTier)return null;
@@ -2676,8 +2865,11 @@ function PageSubscription({settings,setSettings,learners,setPage,showToast}){
         <div style={{fontSize:11,fontWeight:700,color:T.accent,letterSpacing:".12em",textTransform:"uppercase",marginBottom:10}}>Pricing</div>
         <h1 style={{fontSize:28,fontWeight:800,color:T.text,marginBottom:8,letterSpacing:"-.6px",lineHeight:1.2,fontFamily:T.font}}>Simple, transparent pricing</h1>
         <p style={{fontSize:14,color:T.text2,maxWidth:460,margin:"0 auto 16px",lineHeight:1.6}}>Each licence covers one learner — assign a single course or open up the full 300+ library. You choose.</p>
-        <button onClick={()=>setShowDiscount(true)} style={{display:"inline-flex",alignItems:"center",gap:6,border:`1px solid ${T.border}`,borderRadius:20,padding:"7px 18px",background:T.white,cursor:"pointer",fontSize:13,fontWeight:500,color:T.text2,marginBottom:28,fontFamily:T.font,transition:"border-color .15s"}} onMouseEnter={e=>e.currentTarget.style.borderColor=T.accent2} onMouseLeave={e=>e.currentTarget.style.borderColor=T.border}>
-          🏷️ See bulk discounts
+        <button onClick={()=>setShowDiscount(true)}
+          style={{display:"inline-flex",alignItems:"center",gap:7,border:`1.5px solid ${T.accent}`,borderRadius:20,padding:"8px 20px",background:`${T.accent}12`,cursor:"pointer",fontSize:13,fontWeight:600,color:T.accent,marginBottom:28,fontFamily:T.font,transition:"background .15s, box-shadow .15s, transform .15s"}}
+          onMouseEnter={e=>{e.currentTarget.style.background=`${T.accent}22`;e.currentTarget.style.boxShadow=`0 2px 10px ${T.accent}33`;e.currentTarget.style.transform="translateY(-1px)";}}
+          onMouseLeave={e=>{e.currentTarget.style.background=`${T.accent}12`;e.currentTarget.style.boxShadow="none";e.currentTarget.style.transform="none";}}>
+          🏷️ Bulk discounts up to 50% off
         </button>
         <div style={{display:"flex",justifyContent:"center",paddingBottom:32}}>
           <div style={{display:"inline-flex",background:"#ECEAE8",borderRadius:10,padding:3,gap:0}}>
@@ -2692,7 +2884,7 @@ function PageSubscription({settings,setSettings,learners,setPage,showToast}){
                 <button key={v} onClick={()=>setTab(v)} onMouseEnter={()=>setHovTab(active?null:v)} onMouseLeave={()=>setHovTab(null)}
                   style={{position:"relative",zIndex:1,padding:"9px 28px",fontSize:14,fontWeight:500,color,background:"none",border:"none",borderRadius:8,cursor:"pointer",fontFamily:T.font,transition:"color .25s ease",whiteSpace:"nowrap",letterSpacing:"-.01em"}}>
                   {l}
-                  {v==="licences"&&<span style={{fontSize:10,fontWeight:600,color:active?"#6366F1":"#9CA3AF",background:active?"#EEF2FF":"transparent",borderRadius:10,padding:"1px 6px",marginLeft:4,letterSpacing:".02em",transition:"all .25s ease"}}>Best value</span>}
+                  {v==="licences"&&<span style={{fontSize:10,fontWeight:700,color:"#6366F1",background:"#EEF2FF",borderRadius:10,padding:"2px 7px",marginLeft:5,letterSpacing:".02em"}}>Popular</span>}
                   {/* active white pill — dims but stays visible when other hovered */}
                   <span style={{position:"absolute",inset:0,background:"#FFFFFF",borderRadius:8,boxShadow:"0 1px 4px rgba(0,0,0,.12),0 0 0 0.5px rgba(0,0,0,.06)",zIndex:-1,opacity:activePillOpacity,transition:"opacity .25s ease"}}/>
                   {/* hover ghost — near-white so hover→active is seamless */}
@@ -3227,10 +3419,10 @@ export default function CSTApp() {
       <Sidebar page={page} setPage={(p)=>{setPage(p);setSidebarOpen(false);}} learnerCount={learners.filter(l=>l.status!=="Deactivated").length} settings={settings} open={sidebarOpen} onClose={()=>setSidebarOpen(false)}/>
 
       <div style={{flex:1,display:"flex",flexDirection:"column",minHeight:"100vh",overflowY:"auto"}}>
-        <Topbar page={page} openInvite={()=>setShowInvite(true)} openAssign={()=>setShowAssign(true)} onMenuClick={()=>setSidebarOpen(o=>!o)}/>
+        {page!=="learners"&&<Topbar page={page} openInvite={()=>setShowInvite(true)} openAssign={()=>setShowAssign(true)} onMenuClick={()=>setSidebarOpen(o=>!o)}/>}
 
         {page==="dashboard"&&<PageDashboard {...commonProps} openInvite={()=>setShowInvite(true)} openAssign={()=>setShowAssign(true)} setReportCourse={setReportCourse}/>}
-        {page==="learners"&&<PageLearners {...commonProps} courses={courses} setLearners={setLearners} openInvite={()=>setShowInvite(true)}/>}
+        {page==="learners"&&<PageLearners {...commonProps} courses={courses} setLearners={setLearners} openInvite={()=>setShowInvite(true)} openAssign={()=>setShowAssign(true)}/>}
         {page==="invite"&&<div style={{padding:"24px 28px",maxWidth:600}}><div style={{background:T.white,border:`1px solid ${T.border}`,borderRadius:14,padding:24}}><div style={{fontSize:15,fontWeight:700,marginBottom:4}}>Invite Learners</div><div style={{fontSize:13,color:T.text3,marginBottom:20}}>Click the button below to open the invite dialog.</div><Btn variant="primary" onClick={()=>setShowInvite(true)}>Open Invite Dialog</Btn></div></div>}
         {page==="courses"&&<PageCourses {...commonProps} openAssign={()=>setShowAssign(true)} setReportCourse={setReportCourse}/>}
         {page==="assigned"&&<PageAssigned {...commonProps} openAssign={()=>setShowAssign(true)}/>}
